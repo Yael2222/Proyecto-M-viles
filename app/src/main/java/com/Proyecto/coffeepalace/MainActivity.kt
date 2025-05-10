@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.View
+package com.Proyecto.coffeepalace
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
