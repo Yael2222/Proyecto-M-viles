@@ -1,6 +1,5 @@
 package com.Proyecto.coffeepalace.ui.views.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,7 +13,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
+import coil3.request.crossfade
 
 @Composable
 fun ProductCard(
@@ -37,8 +36,9 @@ fun ProductCard(
 ) {
     Card(
         modifier = modifier
-            .width(200.dp)
-            .padding(8.dp).clickable { onClick() },
+            .width(175.dp)
+            .padding(8.dp)
+            .clickable { onClick() },
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(
@@ -52,7 +52,10 @@ fun ProductCard(
                     .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
             ) {
                 AsyncImage(
-                    model = imageRes,
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(imageRes)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = "Product Image",
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
@@ -64,7 +67,6 @@ fun ProductCard(
                     .fillMaxWidth()
                     .padding(12.dp)
             ) {
-                // Nombre del producto
                 Text(
                     text = name,
                     style = MaterialTheme.typography.titleLarge,
@@ -75,7 +77,6 @@ fun ProductCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                // Descripción
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodySmall,
@@ -86,7 +87,6 @@ fun ProductCard(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Precio y rating en fila
                 Column(
                     modifier = Modifier.fillMaxWidth()
                 ) {
@@ -99,7 +99,6 @@ fun ProductCard(
 
                     Spacer(modifier = Modifier.height(4.dp))
 
-                    // Rating de estrellas
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -148,19 +147,3 @@ fun RatingBar(
 private fun Float.formatDecimal(digits: Int = 1): String {
     return "%.${digits}f".format(this).replace(".0", "")
 }
-
-@Composable
-@Preview(showBackground = true, showSystemUi = true)
-fun ProductCardPreview() {
-    MaterialTheme {
-        ProductCard(
-            name = "Café Americano",
-            description = "Un café americano clásico y delicioso.",
-            price = "$2.50",
-            rating = 4.5f,
-            reviewCount = 1200,
-            imageRes = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiBqRLIZq2zTqKFNPt5wAmVzDiePmUnp0KvQ&s"
-        )
-    }
-}
-
