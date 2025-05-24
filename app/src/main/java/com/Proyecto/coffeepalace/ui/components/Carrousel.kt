@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.views.components
+package com.Proyecto.coffeepalace.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
