@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.Model
+package com.Proyecto.coffeepalace.Data.Model
 
 data class ComentarioReceta (
     val usuarioId: Int,

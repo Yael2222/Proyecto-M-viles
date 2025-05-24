@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.Proyecto.coffeepalace.ui.theme.CoffeePalaceTheme
-import com.Proyecto.coffeepalace.ui.views.home.HomePage
+import com.Proyecto.coffeepalace.ui.Screens.HomePage.HomePage
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
