@@ -1,7 +1,6 @@
-package com.Proyecto.coffeepalace.Data
+package com.Proyecto.coffeepalace.Data.Dummy
 
-import com.Proyecto.coffeepalace.Model.ComentarioProducto
-import com.Proyecto.coffeepalace.Model.Producto
+import com.Proyecto.coffeepalace.Data.Model.Producto
 
 class DataProductos {
     val productos = listOf(
