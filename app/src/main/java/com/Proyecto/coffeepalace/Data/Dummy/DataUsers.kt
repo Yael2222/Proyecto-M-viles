@@ -1,7 +1,7 @@
-package com.Proyecto.coffeepalace.Data
+package com.Proyecto.coffeepalace.Data.Dummy
 
-import com.Proyecto.coffeepalace.Model.Producto
-import com.Proyecto.coffeepalace.Model.Usuario
+import com.Proyecto.coffeepalace.Data.Model.Producto
+import com.Proyecto.coffeepalace.Data.Model.Usuario
 
 class DataUsers {
     val usuarios = listOf(
