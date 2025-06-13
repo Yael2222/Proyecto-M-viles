@@ -9,6 +9,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 
 private val DarkColorScheme = darkColorScheme(
@@ -56,3 +57,8 @@ fun CoffeePalaceTheme(
         content = content
     )
 }
+
+val CoffeeBrown = Color(0xFF6A4E3A) // Un ejemplo de café oscuro
+val LightCoffeeBrown = Color(0xFFB18D6C) // Un ejemplo de café más claro
+val TextWhite = Color.White // Blanco para el texto en las tarjetas
+val BackgroundColor = Color(0xFFF5F5F5)
