@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
+import com.Proyecto.coffeepalace.ui.theme.black
+import com.Proyecto.coffeepalace.ui.theme.white
 
 @Composable
 fun ProductCard(
@@ -39,7 +41,8 @@ fun ProductCard(
             .width(175.dp)
             .padding(8.dp)
             .clickable { onClick() },
-        elevation = CardDefaults.cardElevation(4.dp)
+        elevation = CardDefaults.cardElevation(0.dp),
+        colors = CardDefaults.cardColors(white)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -71,7 +74,7 @@ fun ProductCard(
                     text = name,
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = black,
                     fontSize = 16.sp
                 )
 
@@ -80,7 +83,7 @@ fun ProductCard(
                 Text(
                     text = description,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                    color = black,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -94,7 +97,7 @@ fun ProductCard(
                         text = price,
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = black
                     )
 
                     Spacer(modifier = Modifier.height(4.dp))
@@ -115,7 +118,7 @@ fun ProductCard(
                         Text(
                             text = "${(reviewCount / 1000f).formatDecimal()}K",
                             style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                            color = black
                         )
                     }
                 }
