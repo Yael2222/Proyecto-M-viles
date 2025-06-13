@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.Proyecto.coffeepalace.ui.theme.CoffeePalaceTheme
 import com.Proyecto.coffeepalace.ui.Screens.HomePage.HomePage
+import com.Proyecto.coffeepalace.ui.components.CoffeePalaceScaffold
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,9 +18,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CoffeePalaceTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                CoffeePalaceScaffold(content = { innerPadding ->
                     HomePage(Modifier.padding(innerPadding))
-                }
+                })
             }
         }
     }

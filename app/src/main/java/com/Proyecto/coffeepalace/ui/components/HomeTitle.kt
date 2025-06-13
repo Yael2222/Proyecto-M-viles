@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.Proyecto.coffeepalace.ui.theme.black
 
 @Composable
 fun HomeTitle(
@@ -20,6 +21,7 @@ fun HomeTitle(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-        color = MaterialTheme.colorScheme.onBackground, textAlign = TextAlign.Center
+        color = black,
+        textAlign = TextAlign.Center
     )
 }
