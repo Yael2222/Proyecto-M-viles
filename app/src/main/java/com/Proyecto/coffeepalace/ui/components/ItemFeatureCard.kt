@@ -1,6 +1,7 @@
 package com.Proyecto.coffeepalace.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,39 +35,16 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.Proyecto.coffeepalace.Data.Model.ItemFeatureModel
+import com.Proyecto.coffeepalace.Data.Model.toFilteredType
+import com.Proyecto.coffeepalace.ui.Screens.HomeFiltered.FilteredTypes
+import com.Proyecto.coffeepalace.ui.Screens.HomeFiltered.toDomain
 import com.Proyecto.coffeepalace.ui.theme.black
-
-val featureItems = listOf(
-    ItemFeatureModel(
-        1,
-        "Drinks",
-        "Drinks",
-        image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiBqRLIZq2zTqKFNPt5wAmVzDiePmUnp0KvQ&s"
-    ),
-    ItemFeatureModel(
-        2,
-        "Food",
-        "Food",
-        image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiBqRLIZq2zTqKFNPt5wAmVzDiePmUnp0KvQ&s"
-    ),
-    ItemFeatureModel(
-        3,
-        "At Home Coffee",
-        "Coffee Shop",
-        image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiBqRLIZq2zTqKFNPt5wAmVzDiePmUnp0KvQ&s"
-    ),
-    ItemFeatureModel(
-        4,
-        "Merchandise",
-        "Dishes",
-        image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiBqRLIZq2zTqKFNPt5wAmVzDiePmUnp0KvQ&s"
-    ),
-)
 
 @Composable
 fun FeaturesLazyRow(
     modifier: Modifier = Modifier,
-    items: List<ItemFeatureModel> = featureItems
+    items: List<FilteredTypes>,
+    navigateToHomeFiltered: (FilteredTypes) -> Unit
 ) {
     LazyRow(
         modifier = modifier
@@ -77,8 +55,9 @@ fun FeaturesLazyRow(
     ) {
         items(items) { itemFeature ->
             FeatureItemCard(
-                itemFeature = itemFeature,
-                modifier = Modifier.padding(end = 8.dp)
+                itemFeature = itemFeature.toDomain(),
+                modifier = Modifier.padding(end = 8.dp),
+                navigateToHomeFiltered = navigateToHomeFiltered
             )
         }
     }
@@ -87,10 +66,15 @@ fun FeaturesLazyRow(
 @Composable
 fun FeatureItemCard(
     itemFeature: ItemFeatureModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToHomeFiltered: (FilteredTypes) -> Unit
+
 ) {
     Card(
         modifier = modifier
+            .clickable{
+                navigateToHomeFiltered(itemFeature.toFilteredType() ?: FilteredTypes.DRINKS)
+            }
             .height(150.dp)
             .width(110.dp),
         elevation = CardDefaults.elevatedCardElevation(
@@ -136,5 +120,5 @@ fun FeatureItemCard(
 @Composable
 @Preview(showSystemUi = true)
 fun ItemFeatureCardPreview() {
-    FeaturesLazyRow()
+//    FeaturesLazyRow(listOf<ItemFeatureModel>())
 }

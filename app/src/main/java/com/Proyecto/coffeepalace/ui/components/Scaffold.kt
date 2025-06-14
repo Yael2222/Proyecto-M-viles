@@ -163,7 +163,7 @@ fun CoffeePalaceHomeScreen() {
                     "Welcome to The Coffee Palace!",
                     style = MaterialTheme.typography.headlineMedium
                 )
-                FeaturesLazyRow(items = featureItems.filter { it.category == "Drinks" })
+//                FeaturesLazyRow(items = featureItems.filter { it.category == "Drinks" })
             }
         }
     )
