@@ -7,5 +7,4 @@ data class Receta (
     val imagen: String,
     val ingredientes: String,
     val pasos: String,
-
 )

@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.components
+/*package com.Proyecto.coffeepalace.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -79,3 +79,4 @@ data class Banner(
     val imageRes: String,
     val contentDesc: String = "Promoción"
 )
+*/
