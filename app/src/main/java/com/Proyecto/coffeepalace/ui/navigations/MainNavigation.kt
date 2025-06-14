@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.Proyecto.coffeepalace.ui.Screens.HomeFiltered.HomeFiltered
 import com.Proyecto.coffeepalace.ui.Screens.HomePage.HomePage
+import com.Proyecto.coffeepalace.ui.Screens.Profile.ProfileScreen
+import com.Proyecto.coffeepalace.ui.components.BackAppBar
 import com.Proyecto.coffeepalace.ui.components.CoffeePalaceScaffold
 
 @Composable
@@ -17,21 +19,45 @@ fun MainNavigation(navController: NavHostController) {
         startDestination = "main"
     ) {
         composable("main") {
-            CoffeePalaceScaffold(content = { innerPadding ->
-                HomePage(
-                    modifier = Modifier.padding(innerPadding),
-                    navigateToHomeFiltered = { filteredType ->
-                        navController.navigate("homeFiltered")
-                    }
-                )
-            })
+            CoffeePalaceScaffold(
+                navigateToProfileScreen = {
+                    navController.navigate("profile")
+                },
+                content = { innerPadding ->
+                    HomePage(
+                        modifier = Modifier.padding(innerPadding),
+                        navigateToHomeFiltered = { filteredType ->
+                            navController.navigate("homeFiltered")
+                        }
+                    )
+                })
         }
         composable("homeFiltered") {
-            CoffeePalaceScaffold(content = { innerPadding ->
-                HomeFiltered(
-                    modifier = Modifier.padding(innerPadding)
-                )
-            })
+            CoffeePalaceScaffold(
+                navigateToProfileScreen = {
+                    navController.navigate("profile")
+                },
+                content = { innerPadding ->
+                    HomeFiltered(
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                })
+        }
+        composable("profile") {
+            CoffeePalaceScaffold(
+                navigateToProfileScreen = {
+                    navController.navigate("profile")
+                },
+                topBar = {
+                    BackAppBar(title = "Profile", onBackClick = {
+                        navController.popBackStack()
+                    })
+                },
+                content = { innerPadding ->
+                    ProfileScreen(
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                })
         }
     }
 }

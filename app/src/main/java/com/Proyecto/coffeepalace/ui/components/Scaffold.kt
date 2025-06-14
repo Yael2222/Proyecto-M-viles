@@ -1,6 +1,8 @@
 package com.Proyecto.coffeepalace.ui.components
 
+import android.widget.SeekBar
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -12,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.Proyecto.coffeepalace.R
 import com.Proyecto.coffeepalace.ui.theme.Brown
@@ -20,21 +23,25 @@ import com.Proyecto.coffeepalace.ui.theme.LightGray200
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CoffeePalaceScaffold(
+    navigateToProfileScreen: () -> Unit,
     content: @Composable (PaddingValues) -> Unit,
     title: String = "The Coffee Palace",
     showBottomBar: Boolean = true,
     showTopBar: Boolean = true,
+    topBar: @Composable () -> Unit = {
+        CoffeePalaceTopAppBar(
+            title = title,
+            onProfileClick = navigateToProfileScreen,
+            onLogoClick = {}
+        )
+    },
     floatingActionButton: @Composable () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {}
 ) {
     Scaffold(
         topBar = {
             if (showTopBar) {
-                CoffeePalaceTopAppBar(
-                    title = title,
-                    onProfileClick = {},
-                    onLogoClick = {}
-                )
+                topBar()
             }
         },
         bottomBar = {
@@ -67,7 +74,9 @@ fun CoffeePalaceTopAppBar(
                     onClick = onLogoClick,
                 ) {
                     Image(
-                        modifier = Modifier.width(85.dp).height(80.dp),
+                        modifier = Modifier
+                            .width(85.dp)
+                            .height(80.dp),
                         painter = painterResource(R.drawable.logo),
                         contentDescription = "Coffee Palace Logo",
                     )
@@ -147,36 +156,44 @@ fun CoffeePalaceBottomAppBar() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CoffeePalaceHomeScreen() {
-    CoffeePalaceScaffold(
-        title = "The Coffee Palace",
-        content = { paddingValues ->
-            Column(
-                modifier = Modifier
-                    .padding(paddingValues)
-                    .fillMaxSize()
-                    .padding(16.dp)
-            ) {
-                // Your custom content here
-                Text(
-                    "Welcome to The Coffee Palace!",
-                    style = MaterialTheme.typography.headlineMedium
-                )
-//                FeaturesLazyRow(items = featureItems.filter { it.category == "Drinks" })
-            }
-        }
-    )
-}
-
-@Composable
-fun CoffeePalaceDetailScreen() {
-    CoffeePalaceScaffold(
-        title = "Product Details",
-        showBottomBar = false,
-        content = { paddingValues ->
-            Box(modifier = Modifier.padding(paddingValues)) {
-            }
-        }
-    )
+fun BackAppBar(
+    title: String,
+    onBackClick: () -> Unit = {},
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        TopAppBar(
+            colors = TopAppBarDefaults.topAppBarColors(LightGray200),
+            title = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.background(LightGray200)
+                ) {
+                    IconButton(
+                        onClick = onBackClick,
+                        modifier = Modifier.fillMaxWidth(0.2f).padding(end = 8.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBackIosNew,
+                            contentDescription = "Back",
+                            tint = Brown
+                        )
+                    }
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleLarge.copy(
+                            fontWeight = FontWeight.Bold
+                        ),
+                        color = Brown,
+                        modifier = Modifier.fillMaxWidth(0.8f),
+                        textAlign = TextAlign.Center
+                    )
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        )
+    }
 }
