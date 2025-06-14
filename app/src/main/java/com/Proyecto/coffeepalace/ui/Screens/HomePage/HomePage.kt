@@ -21,7 +21,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 object HomePageRoute
 
-
 @Composable
 fun HomePage(
     modifier: Modifier = Modifier,
