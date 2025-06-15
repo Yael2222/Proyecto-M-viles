@@ -23,7 +23,8 @@ import com.Proyecto.coffeepalace.ui.theme.LightGray200
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CoffeePalaceScaffold(
-    navigateToProfileScreen: () -> Unit,
+    navigateToProfileScreen: () -> Unit = {},
+    navigateToCarDetails: () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
     title: String = "The Coffee Palace",
     showBottomBar: Boolean = true,
@@ -46,7 +47,10 @@ fun CoffeePalaceScaffold(
         },
         bottomBar = {
             if (showBottomBar) {
-                CoffeePalaceBottomAppBar()
+                CoffeePalaceBottomAppBar(
+                    navigateToProfileScreen = navigateToProfileScreen,
+                    navigateToCarDetails = navigateToCarDetails
+                )
             }
         },
         floatingActionButton = floatingActionButton,
@@ -107,7 +111,10 @@ fun CoffeePalaceTopAppBar(
 }
 
 @Composable
-fun CoffeePalaceBottomAppBar() {
+fun CoffeePalaceBottomAppBar(
+    navigateToProfileScreen: () -> Unit,
+    navigateToCarDetails: () -> Unit = {},
+) {
     NavigationBar(
         containerColor = LightGray200
     ) {
@@ -139,7 +146,7 @@ fun CoffeePalaceBottomAppBar() {
             },
             label = { Text("Cart", color = Brown) },
             selected = false,
-            onClick = {}
+            onClick = navigateToCarDetails
         )
         NavigationBarItem(
             icon = { Icon(Icons.Default.Search, contentDescription = "Search", tint = Brown) },
@@ -151,7 +158,7 @@ fun CoffeePalaceBottomAppBar() {
             icon = { Icon(Icons.Default.Person, contentDescription = "Profile", tint = Brown) },
             label = { Text("Profile", color = Brown) },
             selected = false,
-            onClick = {}
+            onClick = navigateToProfileScreen
         )
     }
 }
@@ -174,7 +181,9 @@ fun BackAppBar(
                 ) {
                     IconButton(
                         onClick = onBackClick,
-                        modifier = Modifier.fillMaxWidth(0.2f).padding(end = 8.dp)
+                        modifier = Modifier
+                            .fillMaxWidth(0.2f)
+                            .padding(end = 8.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.ArrowBackIosNew,
