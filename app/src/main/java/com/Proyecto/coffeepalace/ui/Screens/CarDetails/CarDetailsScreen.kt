@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.Proyecto.coffeepalace.Data.Model.DeliveryAddressModel
 import com.Proyecto.coffeepalace.R
+import com.Proyecto.coffeepalace.ui.Screens.Checkout.CheckoutScreen
 import com.Proyecto.coffeepalace.ui.components.CheckoutActionShoppingDetails
 import com.Proyecto.coffeepalace.ui.components.DeliveryAddressCard
 import com.Proyecto.coffeepalace.ui.components.HomeTitle
@@ -30,7 +31,8 @@ import com.Proyecto.coffeepalace.ui.theme.LightGray300
 
 @Composable
 fun CarDetailsScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navigateToCheckout: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
@@ -74,7 +76,9 @@ fun CarDetailsScreen(
         CheckoutActionShoppingDetails(
             price = "10",
             onViewDetailsClick = {},
-            onProceedToPaymentClick = {},
+            onProceedToPaymentClick = {
+                navigateToCheckout()
+            },
             modifier = Modifier.weight(0.15f)
         )
     }

@@ -7,6 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.Proyecto.coffeepalace.ui.Screens.CarDetails.CarDetailsScreen
+import com.Proyecto.coffeepalace.ui.Screens.Checkout.CheckoutScreen
 import com.Proyecto.coffeepalace.ui.Screens.HomeFiltered.HomeFiltered
 import com.Proyecto.coffeepalace.ui.Screens.HomePage.HomePage
 import com.Proyecto.coffeepalace.ui.Screens.Profile.ProfileScreen
@@ -20,7 +21,7 @@ fun MainNavigation(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = "main"
+        startDestination = "checkout"
     ) {
         composable("main") {
             CoffeePalaceScaffold(
@@ -69,8 +70,25 @@ fun MainNavigation(navController: NavHostController) {
                 },
                 content = { innerPadding ->
                     CarDetailsScreen(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        navigateToCheckout = { navController.navigate("checkout") },
                     )
+                })
+        }
+        composable("checkout") {
+            CoffeePalaceScaffold(
+                navigateToProfileScreen = navigateToProfileScreen,
+                navigateToCarDetails = navigateToCarDetails,
+                topBar = {
+                    BackAppBar(title = "Checkout", onBackClick = {
+                        navController.popBackStack()
+                    })
+                },
+                content = { innerPadding ->
+                    CheckoutScreen(
+                        modifier = Modifier.padding(innerPadding),
+
+                        )
                 })
         }
     }
