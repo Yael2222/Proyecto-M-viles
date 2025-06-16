@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.CategoryPage
+package com.Proyecto.coffeepalace.ui.Screens.AdminCategoryPage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,8 +8,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,7 +19,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.Proyecto.coffeepalace.Data.Model.Category
+import com.Proyecto.coffeepalace.Data.Model.categoria
 import com.Proyecto.coffeepalace.ui.theme.BackgroundColor
 import com.Proyecto.coffeepalace.ui.theme.LightCoffeeBrown
 import com.Proyecto.coffeepalace.ui.theme.CoffeeBrown
@@ -34,14 +34,17 @@ fun CategoryScreen(
 ) {
     val categories by viewModel.categories.collectAsState()
 
+    var newCategory by remember { mutableStateOf("") }
     var showCategoryDialog by remember { mutableStateOf(false) }
-    var currentCategoryToEdit by remember { mutableStateOf<Category?>(null) }
+    var currentCategoriaToEdit by remember { mutableStateOf<categoria?>(null) }
     var categoryNameInput by remember { mutableStateOf(TextFieldValue("")) }
+    val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
+
                 title = { Text("Categories") },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
@@ -58,7 +61,6 @@ fun CategoryScreen(
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = {
-                    currentCategoryToEdit = null
                     categoryNameInput = TextFieldValue("")
                     showCategoryDialog = true
                 },
@@ -88,26 +90,23 @@ fun CategoryScreen(
                 bottom = 80.dp
             )
         ) {
-            items(categories) { category ->
+            items(categories) { categoriaItem ->
                 CategoryCard(
-                    category = category,
-                    onEditClick = {
-                        currentCategoryToEdit = category
-                        categoryNameInput = TextFieldValue(category.nombre_categoria)
-                        showCategoryDialog = true
+                    categoria = categoriaItem,
+                    onDeleteClick = {
+                        viewModel.deleteCategory(categoriaItem.id)
                     },
-                    onItemClick = { /* Ver detalles si se requiere */ }
+                    onItemClick = { }
                 )
             }
         }
     }
 
-
     if (showCategoryDialog) {
         AlertDialog(
             onDismissRequest = { showCategoryDialog = false },
             title = {
-                Text(if (currentCategoryToEdit == null) "Add New Category" else "Edit Category")
+                Text("Add New Category")
             },
             text = {
                 OutlinedTextField(
@@ -129,17 +128,13 @@ fun CategoryScreen(
                 Button(
                     onClick = {
                         if (categoryNameInput.text.isNotBlank()) {
-                            if (currentCategoryToEdit == null) {
-                                viewModel.addCategory(categoryNameInput.text)
-                            } else {
-                                viewModel.editCategory(currentCategoryToEdit!!.id, categoryNameInput.text)
-                            }
+                            viewModel.addCategory(categoryNameInput.text)
                         }
                         showCategoryDialog = false
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = CoffeeBrown, contentColor = TextWhite)
                 ) {
-                    Text(if (currentCategoryToEdit == null) "Add" else "Save")
+                    Text("Add")
                 }
             },
             dismissButton = {
@@ -158,8 +153,8 @@ fun CategoryScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryCard(
-    category: Category,
-    onEditClick: () -> Unit,
+    categoria: categoria,
+    onDeleteClick: () -> Unit,
     onItemClick: () -> Unit
 ) {
     Card(
@@ -181,21 +176,23 @@ fun CategoryCard(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = category.nombre_categoria,
+                text = categoria.nombre,
                 fontSize = 18.sp,
                 modifier = Modifier.weight(1f)
             )
 
             Row(verticalAlignment = Alignment.CenterVertically) {
-                TextButton(onClick = onEditClick) {
-                    Text("Edit", color = TextWhite)
+                TextButton(onClick = onDeleteClick) {
+                    Text("Delete", color = TextWhite)
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Icon(
-                    Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "Go to details",
+                    Icons.Filled.Delete,
+                    contentDescription = "Delete",
                     tint = TextWhite,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clickable(onClick = onDeleteClick)
                 )
             }
         }

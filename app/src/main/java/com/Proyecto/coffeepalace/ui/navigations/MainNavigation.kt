@@ -7,7 +7,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.Proyecto.coffeepalace.ui.Screens.AdminDashboard.AdminDashboardScreen
-import com.Proyecto.coffeepalace.ui.Screens.CategoryPage.CategoryScreen
+import com.Proyecto.coffeepalace.ui.Screens.AdminCategoryPage.CategoryScreen
 import com.Proyecto.coffeepalace.navigation.Screens
 
 @Composable

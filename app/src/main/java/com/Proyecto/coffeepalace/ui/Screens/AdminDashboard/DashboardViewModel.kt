@@ -22,7 +22,7 @@ class DashboardViewModel : ViewModel(){
     init {
         _dashboardItems.value = listOf(
             DashboardItem("stadistics", "Stadistics", Icons.Default.Analytics, Screens.Categories.route),
-            DashboardItem("users_shops", "Users & Shops", Icons.Default.People, Screens.Categories.route),
+            DashboardItem("users_shops", "Users", Icons.Default.People, Screens.Categories.route),
             DashboardItem("purchase_orders", "Purchase orders", Icons.Default.ShoppingCart, Screens.Categories.route),
             DashboardItem("comments_ratings", "Comments and ratings", Icons.Default.Star, Screens.Categories.route),
             DashboardItem("advertisements", "Advertisements", Icons.Default.Campaign, Screens.Categories.route),
