@@ -10,6 +10,7 @@ import com.Proyecto.coffeepalace.ui.Screens.CarDetails.CarDetailsScreen
 import com.Proyecto.coffeepalace.ui.Screens.Checkout.CheckoutScreen
 import com.Proyecto.coffeepalace.ui.Screens.HomeFiltered.HomeFiltered
 import com.Proyecto.coffeepalace.ui.Screens.HomePage.HomePage
+import com.Proyecto.coffeepalace.ui.Screens.PlaceOrderDetails.PlaceOrderDetailsScreen
 import com.Proyecto.coffeepalace.ui.Screens.Profile.ProfileScreen
 import com.Proyecto.coffeepalace.ui.components.BackAppBar
 import com.Proyecto.coffeepalace.ui.components.CoffeePalaceScaffold
@@ -21,7 +22,7 @@ fun MainNavigation(navController: NavHostController) {
 
     NavHost(
         navController = navController,
-        startDestination = "checkout"
+        startDestination = "orderDetails",
     ) {
         composable("main") {
             CoffeePalaceScaffold(
@@ -86,6 +87,22 @@ fun MainNavigation(navController: NavHostController) {
                 },
                 content = { innerPadding ->
                     CheckoutScreen(
+                        modifier = Modifier.padding(innerPadding),
+
+                        )
+                })
+        }
+        composable("orderDetails") {
+            CoffeePalaceScaffold(
+                navigateToProfileScreen = navigateToProfileScreen,
+                navigateToCarDetails = navigateToCarDetails,
+                topBar = {
+                    BackAppBar(title = "Details", onBackClick = {
+                        navController.popBackStack()
+                    })
+                },
+                content = { innerPadding ->
+                    PlaceOrderDetailsScreen(
                         modifier = Modifier.padding(innerPadding),
 
                         )
