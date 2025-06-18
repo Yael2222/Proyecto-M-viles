@@ -21,7 +21,6 @@ fun OrderSummary(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        // Resumen de pedido
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween

@@ -25,6 +25,7 @@ import com.Proyecto.coffeepalace.ui.theme.LightGray200
 @Composable
 fun CheckoutScreen(
     modifier: Modifier = Modifier,
+    navigateToPayment: () -> Unit = {}
 ) {
     var selectedMethod by remember { mutableStateOf<String?>(null) }
     LazyColumn(
@@ -59,7 +60,7 @@ fun CheckoutScreen(
 
             CustomButton(
                 text = "Continue",
-                onClick = { },
+                onClick = navigateToPayment,
                 modifier = Modifier.fillMaxWidth().padding(20.dp)
             )
         }

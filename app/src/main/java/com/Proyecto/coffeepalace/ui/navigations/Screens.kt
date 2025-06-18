@@ -68,7 +68,7 @@ fun NavGraph() {
                     HomePage(
                         modifier = Modifier.padding(innerPadding),
                         navigateToHomeFiltered = { filteredType ->
-                            navController.navigate("homeFiltered")
+                            navController.navigate(Screens.HomeFilteredClient.route)
                         }
                     )
                 })
@@ -108,7 +108,7 @@ fun NavGraph() {
                 content = { innerPadding ->
                     CarDetailsScreen(
                         modifier = Modifier.padding(innerPadding),
-                        navigateToCheckout = { navController.navigate("checkout") },
+                        navigateToCheckout = { navController.navigate(Screens.CheckoutClient.route) },
                     )
                 })
         }
@@ -124,7 +124,7 @@ fun NavGraph() {
                 content = { innerPadding ->
                     CheckoutScreen(
                         modifier = Modifier.padding(innerPadding),
-
+                        navigateToPayment = {navController.navigate(Screens.ConfirmationPaymentClient.route)}
                         )
                 })
         }
