@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.Seller.Category
+package com.Proyecto.coffeepalace.ui.Screens.Seller.Ingrediente
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,19 +17,19 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryScreen(
-    viewModel: CategoryViewModel,
+fun addIngredienteScreen(
+    viewModel: addIngredienteViewModel,
     navController: NavHostController
 ) {
-    val categories by viewModel.categories.collectAsState()
+    val ingredientes by viewModel.ingredientes.collectAsState()
     var showDialog by remember { mutableStateOf(false) }
-    var newCategory by remember { mutableStateOf("") }
+    var newIngrediente by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Categorias") },
+                title = { Text("Ingredientes") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -38,29 +38,32 @@ fun CategoryScreen(
             )
         }
     ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
 
             LazyColumn {
-                items(categories) { category ->
+                items(ingredientes) { ingrediente ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = category.nombre)
+                        Text(text = ingrediente.nombre)
                         IconButton(onClick = {
-                            category.id?.let {
-                                coroutineScope.launch {
-                                    viewModel.deleteCategory(it)
+                            coroutineScope.launch {
+                                ingrediente.id.let {
+                                    val deleted = viewModel.deleteIngrediente(it)
+                                    // Nada extra aquí, el ViewModel ya recarga la lista
                                 }
                             }
                         }) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete Category"
+                                contentDescription = "Delete Ingrediente"
                             )
                         }
                     }
@@ -77,10 +80,13 @@ fun CategoryScreen(
                     contentColor = Color.White
                 )
             ) {
-                Text("+ Add Category")
+                Text("+ Añadir Ingrediente")
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
-                text = "* Si no se puede borrar, es porque está asignado a una producto. borrar primero el producto",
+                text = "* Si no se puede borrar, es porque está asignado a una receta. Borrar primero la receta",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Red
             )
@@ -88,33 +94,33 @@ fun CategoryScreen(
             if (showDialog) {
                 AlertDialog(
                     onDismissRequest = { showDialog = false },
-                    title = { Text("New Category") },
+                    title = { Text("Nuevo Ingrediente") },
                     text = {
                         OutlinedTextField(
-                            value = newCategory,
-                            onValueChange = { newCategory = it },
-                            label = { Text("Category Name") },
+                            value = newIngrediente,
+                            onValueChange = { newIngrediente = it },
+                            label = { Text("Nombre del ingrediente") },
                             modifier = Modifier.fillMaxWidth()
                         )
                     },
                     confirmButton = {
                         TextButton(onClick = {
-                            if (newCategory.isNotBlank()) {
+                            if (newIngrediente.isNotBlank()) {
                                 coroutineScope.launch {
-                                    viewModel.addCategory(newCategory.trim())
-                                    newCategory = ""
+                                    viewModel.addIngrediente(newIngrediente.trim())
+                                    newIngrediente = ""
                                     showDialog = false
                                 }
                             }
                         }) {
-                            Text("Add")
+                            Text("Agregar")
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = {
                             showDialog = false
                         }) {
-                            Text("Cancel")
+                            Text("Cancelar")
                         }
                     }
                 )

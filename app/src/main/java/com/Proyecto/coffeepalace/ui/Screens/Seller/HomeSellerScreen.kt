@@ -51,7 +51,7 @@ fun HomeSellerScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Welcome,\nCafé Aroma!",
+                    text = "Welcome,\nVendendor!",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 30.sp
@@ -97,22 +97,31 @@ fun HomeSellerScreen(
                 colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
                 Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                    OptionItem(icon = Icons.Default.Add, text = "Add product") {
-                        navController.navigate(Screens.AddProduct.route)
-                    }
-                    OptionItem(icon = Icons.AutoMirrored.Filled.List, text = "View stock") {
-                        navController.navigate(Screens.ViewStock.route)
-                    }
-                    OptionItem(icon = Icons.Default.Group, text = "View users") {
+                    OptionItem(icon = Icons.Default.People, text = "Ver usuarios") {
                         navController.navigate(Screens.ViewUsers.route)
                     }
-                    OptionItem(icon = Icons.Default.BarChart, text = "Estadistics") {
-                        navController.navigate(Screens.Estadistics.route)
+                    OptionItem(icon = Icons.Default.ShoppingCart, text = "Ver ordenes") {
+                        navController.navigate(Screens.AddReceta.route)
                     }
-                    OptionItem(icon = Icons.AutoMirrored.Filled.Message, text = "Comments") {
-                        navController.navigate(Screens.Comments.route)
+                    OptionItem(icon = Icons.Default.Category, text = "Añadir categoría") {
+                        navController.navigate(Screens.Category.route)
                     }
-                    OptionItem(icon = Icons.Default.Category, text = "Category") {
+                    OptionItem(icon = Icons.Default.LocalCafe, text = "Añadir producto") {
+                        navController.navigate(Screens.AddProduct.route)
+                    }
+                    OptionItem(icon = Icons.Default.RestaurantMenu, text = "Añadir ingrediente") {
+                        navController.navigate(Screens.Ingrediente.route)
+                    }
+                    OptionItem(icon = Icons.Default.MenuBook, text = "Añadir Receta") {
+                        navController.navigate(Screens.AddReceta.route)
+                    }
+                    OptionItem(icon = Icons.Default.Delete, text = "Eliminar Productos") {
+                        navController.navigate(Screens.DeleteProduct.route)
+                    }
+                    OptionItem(icon = Icons.Default.DeleteForever, text = "Eliminar Recetas") {
+                        navController.navigate(Screens.DeleteReceta.route)
+                    }
+                    OptionItem(icon = Icons.Default.Logout, text = "Cerrar Sesion") {
                         navController.navigate(Screens.Category.route)
                     }
                 }

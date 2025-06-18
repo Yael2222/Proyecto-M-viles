@@ -70,6 +70,8 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
     implementation("io.ktor:ktor-client-okhttp:2.3.2")
     implementation("androidx.appcompat:appcompat:1.7.1")
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
