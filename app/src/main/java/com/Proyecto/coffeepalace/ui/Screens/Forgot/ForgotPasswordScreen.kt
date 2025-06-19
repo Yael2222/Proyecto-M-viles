@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -18,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.compose.runtime.getValue
+import com.Proyecto.coffeepalace.ui.utils.hideKeyboardOnTap
 
 @Composable
 fun ForgotPasswordScreen(
@@ -33,16 +37,18 @@ fun ForgotPasswordScreen(
     navController: NavHostController,
     //onNavigateBack: () -> Unit
 ) {
-    val email = viewModel.email
-    val errorMessage = viewModel.errorMessage.value
-    val successMessage = viewModel.successMessage.value
+    val email by viewModel.email.collectAsState()
+    val errorMessage by viewModel.errorMessage.collectAsState()
+    val successMessage by viewModel.successMessage.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     Scaffold { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(24.dp),
+                .padding(24.dp)
+                .hideKeyboardOnTap(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -52,12 +58,14 @@ fun ForgotPasswordScreen(
 
             EmailField(
                 value = email,
-                onValueChange = viewModel::onEmailChange
+                onValueChange = viewModel::onEmailChange,
+                enabled = !isLoading
             )
 
-            if (!errorMessage.isNullOrEmpty()) {
+            val error = errorMessage
+            if (!error.isNullOrEmpty()) {
                 Text(
-                    text = errorMessage,
+                    text = error,
                     color = Color.Red,
                     fontSize = 12.sp,
                     modifier = Modifier
@@ -66,9 +74,10 @@ fun ForgotPasswordScreen(
                 )
             }
 
-            if (!successMessage.isNullOrEmpty()) {
+            val success = successMessage
+            if (!success.isNullOrEmpty()) {
                 Text(
-                    text = successMessage,
+                    text = success,
                     color = Color(0xFF4CAF50),
                     fontSize = 12.sp,
                     modifier = Modifier
@@ -98,10 +107,22 @@ fun ForgotPasswordScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4B2B20)),
-                shape = RoundedCornerShape(8.dp)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (isLoading) Color.Gray else Color(0xFF4B2B20)
+                ),
+                shape = RoundedCornerShape(8.dp),
+                enabled = !isLoading
             ) {
-                Text("Submit", color = Color.White, fontWeight = FontWeight.Bold)
+                if (isLoading) {
+                    androidx.compose.material3.CircularProgressIndicator(
+                        color = Color.White,
+                        modifier = Modifier
+                            .height(24.dp)
+                            .width(24.dp)
+                    )
+                } else {
+                    Text("Submit", color = Color.White, fontWeight = FontWeight.Bold)
+                }
             }
         }
     }
@@ -118,10 +139,11 @@ fun TitleSection() {
 }
 
 @Composable
-fun EmailField(value: String, onValueChange: (String) -> Unit) {
+fun EmailField(value: String, onValueChange: (String) -> Unit, enabled: Boolean) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
+        enabled = enabled,
         placeholder = { Text("Enter your email address") },
         leadingIcon = {
             Icon(
