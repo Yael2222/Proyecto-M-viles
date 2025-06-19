@@ -25,13 +25,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 
 @Composable
 fun ForgotPasswordScreen(
     viewModel: ForgotPasswordViewModel = viewModel(),
-    onNavigateBack: () -> Unit
+    navController: NavHostController,
+    //onNavigateBack: () -> Unit
 ) {
     val email = viewModel.email
+    val errorMessage = viewModel.errorMessage.value
+    val successMessage = viewModel.successMessage.value
 
     Scaffold { paddingValues ->
         Column(
@@ -51,6 +55,28 @@ fun ForgotPasswordScreen(
                 onValueChange = viewModel::onEmailChange
             )
 
+            if (!errorMessage.isNullOrEmpty()) {
+                Text(
+                    text = errorMessage,
+                    color = Color.Red,
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .fillMaxWidth()
+                )
+            }
+
+            if (!successMessage.isNullOrEmpty()) {
+                Text(
+                    text = successMessage,
+                    color = Color(0xFF4CAF50),
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .padding(top = 4.dp)
+                        .fillMaxWidth()
+                )
+            }
+
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
@@ -64,7 +90,10 @@ fun ForgotPasswordScreen(
             Button(
                 onClick = {
                     viewModel.submitResetRequest()
-                    onNavigateBack()
+                    // Solo navega si no hay error
+                    /*if (viewModel.errorMessage.value == null) {
+                        onNavigateBack()
+                    }*/
                 },
                 modifier = Modifier
                     .fillMaxWidth()
