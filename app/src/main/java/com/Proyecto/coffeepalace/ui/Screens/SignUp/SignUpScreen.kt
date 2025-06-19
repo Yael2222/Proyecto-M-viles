@@ -38,7 +38,6 @@ fun SignUpScreen(
             Text("Create an", fontSize = 50.sp, fontWeight = FontWeight.Bold)
             Text("account", fontSize = 50.sp, fontWeight = FontWeight.Bold)
 
-
             Spacer(modifier = Modifier.height(32.dp))
 
             OutlinedTextField(
@@ -47,7 +46,13 @@ fun SignUpScreen(
                 label = { Text("Username or Email") },
                 leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color(0xFFB55B00),
+                    focusedLabelColor = Color(0xFFB55B00),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -67,7 +72,13 @@ fun SignUpScreen(
                 },
                 singleLine = true,
                 visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color(0xFFB55B00),
+                    focusedLabelColor = Color(0xFFB55B00),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -87,7 +98,13 @@ fun SignUpScreen(
                 },
                 singleLine = true,
                 visualTransformation = if (viewModel.isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color(0xFFB55B00),
+                    focusedLabelColor = Color(0xFFB55B00),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
+                )
             )
 
             Spacer(modifier = Modifier.height(8.dp))
