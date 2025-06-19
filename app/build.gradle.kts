@@ -51,6 +51,14 @@ android {
     }
 }
 
+configurations.all {
+    resolutionStrategy {
+        force("com.google.guava:guava:31.1-jre")
+        exclude("com.google.guava", "listenablefuture")
+    }
+}
+
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -74,8 +82,11 @@ dependencies {
     implementation(libs.supabase.kt)
     implementation(libs.supabase.postgrest)
     implementation(libs.kotlinx.serialization.json)
-    implementation("io.ktor:ktor-client-okhttp:2.3.2")
+    implementation("io.ktor:ktor-client-okhttp:2.3.2") {
+        exclude(group = "com.google.guava", module = "listenablefuture")
+    }
     implementation("androidx.appcompat:appcompat:1.7.1")
+    implementation(libs.androidx.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

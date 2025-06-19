@@ -20,7 +20,8 @@ appcompat = "1.6.1"
 
 supabase = "1.4.5"
 kotlinxSerialization = "1.6.3"
-coil = "2.6.0" # <--- ACTUALIZADO A UNA VERSIÓN MÁS RECIENTE DE COIL
+coil = "2.6.0"
+compiler = "3.2.0-alpha11" # <--- ACTUALIZADO A UNA VERSIÓN MÁS RECIENTE DE COIL
 
 [libraries]
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
@@ -51,7 +52,8 @@ supabase-kt = { group = "io.github.jan-tennert.supabase", name = "supabase-kt", 
 supabase-postgrest = { group = "io.github.jan-tennert.supabase", name = "postgrest-kt", version.ref = "supabase" }
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerialization" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
-coil-okhttp = { group = "io.coil-kt", name = "coil-okhttp", version.ref = "coil" } # <--- CAMBIO CLAVE AQUÍ: 'coil-okhttp' en lugar de 'coil-network-okhttp'
+coil-okhttp = { group = "io.coil-kt", name = "coil-okhttp", version.ref = "coil" }
+androidx-compiler = { group = "androidx.databinding", name = "compiler", version.ref = "compiler" } # <--- CAMBIO CLAVE AQUÍ: 'coil-okhttp' en lugar de 'coil-network-okhttp'
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

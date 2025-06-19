@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.PlaceOrderDetails
+package com.Proyecto.coffeepalace.ui.Screens.Client.PlaceOrderDetails
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.Profile
+package com.Proyecto.coffeepalace.ui.Screens.Client.Profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

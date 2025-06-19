@@ -7,20 +7,22 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.Proyecto.coffeepalace.ui.Screens.CarDetails.CarDetailsScreen
-import com.Proyecto.coffeepalace.ui.Screens.Checkout.CheckoutScreen
-import com.Proyecto.coffeepalace.ui.Screens.ConfirmationPayment.ConfirmationPaymentScreen
-import com.Proyecto.coffeepalace.ui.Screens.GetStarted.GetStartedScreen
-import com.Proyecto.coffeepalace.ui.Screens.HomeFiltered.HomeFiltered
-import com.Proyecto.coffeepalace.ui.Screens.HomePage.HomePage
-import com.Proyecto.coffeepalace.ui.Screens.PlaceOrderDetails.PlaceOrderDetailsScreen
-import com.Proyecto.coffeepalace.ui.Screens.Profile.ProfileScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.CarDetails.CarDetailsScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.Checkout.CheckoutScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.ConfirmationPayment.ConfirmationPaymentScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.EntryPoints.EntryPointsScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.GetStarted.GetStartedScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered.HomeFiltered
+import com.Proyecto.coffeepalace.ui.Screens.Client.HomePage.HomePage
+import com.Proyecto.coffeepalace.ui.Screens.Client.PlaceOrderDetails.PlaceOrderDetailsScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.Profile.ProfileScreen
 import com.Proyecto.coffeepalace.ui.Screens.Seller.Category.CategoryScreen
 import com.Proyecto.coffeepalace.ui.Screens.Seller.Category.CategoryViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Seller.HomeSeller.HomeSellerScreen
 import com.Proyecto.coffeepalace.ui.Screens.Seller.HomeSeller.HomeSellerViewModel
 import com.Proyecto.coffeepalace.ui.components.BackAppBar
 import com.Proyecto.coffeepalace.ui.components.CoffeePalaceScaffold
+import com.Proyecto.coffeepalace.ui.components.NextScreenAppBar
 
 sealed class Screens(val route: String) {
     object HomeSeller : Screens("home_seller")
@@ -38,16 +40,19 @@ sealed class Screens(val route: String) {
     object HomeFilteredClient : Screens("home_filtered_client")
     object OrderDetailsClient : Screens("order_details_client")
     object GetStartedClient : Screens("get_started_client")
+    object EntryPoints : Screens("entry_points")
 }
 
 @Composable
-fun NavGraph() {
+fun NavGraph(
+    isFirstLaunch: Boolean = true
+) {
     val navController = rememberNavController()
 
     val navigateToProfileScreen = { navController.navigate(Screens.ProfileClient.route) }
     val navigateToCarDetails = { navController.navigate(Screens.CarDetailsClient.route) }
 
-    NavHost(navController = navController, startDestination = Screens.HomeClient.route) {
+    NavHost(navController = navController, startDestination = Screens.EntryPoints.route) {
 
         composable(route = Screens.HomeSeller.route) {
             val homeSellerViewModel: HomeSellerViewModel = viewModel()
@@ -124,8 +129,8 @@ fun NavGraph() {
                 content = { innerPadding ->
                     CheckoutScreen(
                         modifier = Modifier.padding(innerPadding),
-                        navigateToPayment = {navController.navigate(Screens.ConfirmationPaymentClient.route)}
-                        )
+                        navigateToPayment = { navController.navigate(Screens.ConfirmationPaymentClient.route) }
+                    )
                 })
         }
         composable(Screens.OrderDetailsClient.route) {
@@ -165,9 +170,11 @@ fun NavGraph() {
                 navigateToProfileScreen = navigateToProfileScreen,
                 navigateToCarDetails = navigateToCarDetails,
                 topBar = {
-                    BackAppBar(title = "Get Started", onBackClick = {
-                        navController.popBackStack()
-                    })
+                    NextScreenAppBar(
+                        onNextClick = {
+                            navController.navigate(Screens.HomeClient.route)
+                        }
+                    )
                 },
                 content = { innerPadding ->
                     GetStartedScreen(
@@ -176,6 +183,17 @@ fun NavGraph() {
                 })
         }
 
-        // Agrega aquí los otros destinos si los necesitas
+        composable(Screens.EntryPoints.route) {
+            EntryPointsScreen(
+                isFirstLaunch = isFirstLaunch,
+                navigateToGetStarted = {
+                    navController.navigate(Screens.GetStartedClient.route)
+                },
+                navigateToHomePage = {
+                    navController.navigate(Screens.HomeClient.route)
+                }
+            )
+        }
+
     }
 }

@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.HomeFiltered
+package com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered
 
 import com.Proyecto.coffeepalace.Data.Model.ItemFeatureModel
 

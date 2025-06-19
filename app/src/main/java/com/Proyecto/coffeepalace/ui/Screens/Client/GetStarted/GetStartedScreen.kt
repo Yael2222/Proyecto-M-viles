@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.GetStarted
+package com.Proyecto.coffeepalace.ui.Screens.Client.GetStarted
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

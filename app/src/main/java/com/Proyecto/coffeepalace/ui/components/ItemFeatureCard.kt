@@ -34,8 +34,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.Proyecto.coffeepalace.Data.Model.ItemFeatureModel
 import com.Proyecto.coffeepalace.Data.Model.toFilteredType
-import com.Proyecto.coffeepalace.ui.Screens.HomeFiltered.FilteredTypes
-import com.Proyecto.coffeepalace.ui.Screens.HomeFiltered.toDomain
+import com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered.FilteredTypes
+import com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered.toDomain
 import com.Proyecto.coffeepalace.ui.theme.black
 
 @Composable

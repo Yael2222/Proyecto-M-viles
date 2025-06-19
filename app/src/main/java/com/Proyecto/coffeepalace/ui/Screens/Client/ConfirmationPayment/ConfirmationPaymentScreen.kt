@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.ConfirmationPayment
+package com.Proyecto.coffeepalace.ui.Screens.Client.ConfirmationPayment
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer

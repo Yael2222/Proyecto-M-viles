@@ -25,16 +25,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
-import com.Proyecto.coffeepalace.Data.Model.Banner
+import com.Proyecto.coffeepalace.Data.Model.Anuncio
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BannerCarousel(
-    banners: List<Banner>,
+    anuncios: List<Anuncio>,
     modifier: Modifier = Modifier,
     onBannerClick: (Int) -> Unit = {}
 ) {
-    val pagerState = rememberPagerState(pageCount = { banners.size })
+    val pagerState = rememberPagerState(pageCount = { anuncios.size })
 
     Column(modifier = modifier) {
         HorizontalPager(
@@ -43,14 +43,14 @@ fun BannerCarousel(
                 .fillMaxWidth()
                 .height(180.dp)
         ) { page ->
-            val banner = banners[page]
+            val banner = anuncios[page]
             Image(
                 painter = rememberAsyncImagePainter(
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data("file:///android_asset/${banner.imageRes}")
+                        .data("file:///android_asset/${banner.imagen}")
                         .build()
                 ),
-                contentDescription = banner.contentDesc,
+                contentDescription = banner.descripcion,
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable { onBannerClick(page) },
@@ -64,7 +64,7 @@ fun BannerCarousel(
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.Center
         ) {
-            repeat(banners.size) { index ->
+            repeat(anuncios.size) { index ->
                 val color = if (pagerState.currentPage == index) {
                     MaterialTheme.colorScheme.primary
                 } else {

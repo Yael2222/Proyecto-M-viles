@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.Checkout
+package com.Proyecto.coffeepalace.ui.Screens.Client.Checkout
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

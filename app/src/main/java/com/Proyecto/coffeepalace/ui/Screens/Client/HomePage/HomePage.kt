@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.HomePage
+package com.Proyecto.coffeepalace.ui.Screens.Client.HomePage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Spacer
@@ -9,8 +9,8 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.Proyecto.coffeepalace.Data.Model.Banner
-import com.Proyecto.coffeepalace.ui.Screens.HomeFiltered.FilteredTypes
+import com.Proyecto.coffeepalace.Data.Model.Anuncio
+import com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered.FilteredTypes
 import com.Proyecto.coffeepalace.ui.components.BannerCarousel
 import com.Proyecto.coffeepalace.ui.components.FeaturesLazyRow
 import com.Proyecto.coffeepalace.ui.components.HomeTitle
@@ -36,10 +36,10 @@ fun HomePage(
         }
         item {
             BannerCarousel(
-                banners = listOf(
-                    Banner("1", "Carrousel.png"),
-                    Banner("2", "Carrousel.png"),
-                    Banner("3", "Carrousel.png"),
+                anuncios = listOf(
+                    Anuncio("1", "Carrousel.png"),
+                    Anuncio("2", "Carrousel.png"),
+                    Anuncio("3", "Carrousel.png"),
                 )
             )
         }

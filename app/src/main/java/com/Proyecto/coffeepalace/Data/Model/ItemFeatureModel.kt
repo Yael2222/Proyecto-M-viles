@@ -1,6 +1,6 @@
 package com.Proyecto.coffeepalace.Data.Model
 
-import com.Proyecto.coffeepalace.ui.Screens.HomeFiltered.FilteredTypes
+import com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered.FilteredTypes
 
 data class ItemFeatureModel(
     val id: Int,
