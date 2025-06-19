@@ -61,6 +61,8 @@ fun LoginScreen(
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color(0xFFB55B00),
                     focusedLabelColor = Color(0xFFB55B00),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 )
             )
 
@@ -86,6 +88,8 @@ fun LoginScreen(
                 colors = TextFieldDefaults.colors(
                     focusedIndicatorColor = Color(0xFFB55B00),
                     focusedLabelColor = Color(0xFFB55B00),
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White
                 )
             )
 
