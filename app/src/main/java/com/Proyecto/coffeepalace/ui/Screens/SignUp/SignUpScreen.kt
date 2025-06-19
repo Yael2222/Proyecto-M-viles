@@ -125,7 +125,7 @@ fun SignUpScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 SocialButton(assetName = "icon_google.png")
-                SocialButton(assetName = "icon_facebook.png")
+                //SocialButton(assetName = "icon_facebook.png")
             }
 
             Spacer(modifier = Modifier.height(24.dp))

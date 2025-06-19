@@ -56,7 +56,12 @@ fun LoginScreen(
                 label = { Text("Username or Email") },
                 leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                 singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color(0xFFB55B00),
+                    focusedLabelColor = Color(0xFFB55B00),
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -70,13 +75,18 @@ fun LoginScreen(
                     IconButton(onClick = viewModel::onTogglePasswordVisibility) {
                         Icon(
                             imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     }
                 },
                 singleLine = true,
                 visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color(0xFFB55B00),
+                    focusedLabelColor = Color(0xFFB55B00),
+                )
             )
 
             Box(
@@ -123,7 +133,7 @@ fun LoginScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 SocialButton(assetName = "icon_google.png")
-                SocialButton(assetName = "icon_facebook.png")
+                //SocialButton(assetName = "icon_facebook.png")
             }
 
             Spacer(modifier = Modifier.height(24.dp))
