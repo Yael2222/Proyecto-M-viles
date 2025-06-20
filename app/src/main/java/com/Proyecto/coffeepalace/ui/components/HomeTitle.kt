@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.components
+/*package com.Proyecto.coffeepalace.ui.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,3 +23,4 @@ fun HomeTitle(
         color = MaterialTheme.colorScheme.onBackground, textAlign = TextAlign.Center
     )
 }
+*/

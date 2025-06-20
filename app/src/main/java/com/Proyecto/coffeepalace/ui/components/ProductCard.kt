@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.components
+/*package com.Proyecto.coffeepalace.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -147,3 +147,4 @@ fun RatingBar(
 private fun Float.formatDecimal(digits: Int = 1): String {
     return "%.${digits}f".format(this).replace(".0", "")
 }
+ */
