@@ -103,7 +103,7 @@ fun SignUpScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "By clicking the Register button, you agree\nto the public offer",
+                text = "By clicking the Register button, you agree to the public offer",
                 fontSize = 12.sp,
                 color = Color.Gray
             )
