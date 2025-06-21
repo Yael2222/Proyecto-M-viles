@@ -1,5 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.Seller
-
+package com.Proyecto.coffeepalace.ui.Screens.Seller.HomeSeller
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,19 +17,23 @@ class HomeSellerViewModel : ViewModel() {
         loadHomeData()
     }
 
+
     private fun loadHomeData() {
         viewModelScope.launch {
-            // Simulación de datos
+            // Static data simulation for now, replicating the data from your image.
             val orders = listOf(
-                Order("Alejandra P.", 18.0, "Pendiente"),
-                Order("Eduardo G.", 9.0, "En preparación"),
-                Order("Eduardo G.", 13.0, "Entregado")
+                Order("Alejandra P.", 18.00, "Pendiente"),
+                Order("Eduardo G.", 9.00, "En preparación"),
+                Order("Eduardo G.", 13.00, "Entregado") // Matches the image data
             )
             _uiState.value = HomeSellerState(
-                salesToday = 200.0,
+                salesToday = 200.00,
                 ordersToday = 3,
                 currentOrders = orders
             )
+            println("HomeSellerViewModel: Initial data loaded. Sales: ${_uiState.value.salesToday}, Orders: ${_uiState.value.ordersToday}")
         }
     }
+
+
 }

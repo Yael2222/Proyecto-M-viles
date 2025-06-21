@@ -1,19 +1,43 @@
 package com.Proyecto.coffeepalace.ui.Screens.Seller.Category
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.Proyecto.coffeepalace.Data.Daos.category.DaoCategoryImpl
+import com.Proyecto.coffeepalace.Data.Model.categoria
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
 class CategoryViewModel : ViewModel() {
-    var categories = mutableStateListOf("Category 1", "Category 2", "Category 3")
-        private set
 
-    fun addCategory(name: String) {
-        categories.add(name)
+    private val dao = DaoCategoryImpl()
+
+    private val _categories = MutableStateFlow<List<categoria>>(emptyList())
+    val categories = _categories.asStateFlow()
+
+    init {
+        loadCategories()
     }
 
-    fun editCategory(index: Int, newName: String) {
-        if (index in categories.indices) {
-            categories[index] = newName
+    fun loadCategories() {
+        viewModelScope.launch {
+            _categories.value = dao.getAllCategories()
+        }
+    }
+
+    fun addCategory(nombre: String) {
+        viewModelScope.launch {
+            if (dao.addCategory(nombre)) {
+                loadCategories()
+            }
+        }
+    }
+
+    fun deleteCategory(id: Long) {
+        viewModelScope.launch {
+            if (dao.deleteCategory(id)) {
+                loadCategories()
+            }
         }
     }
 }
