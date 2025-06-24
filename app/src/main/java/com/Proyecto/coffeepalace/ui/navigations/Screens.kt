@@ -4,18 +4,26 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.Proyecto.coffeepalace.ui.Screens.Client.CarDetails.CarDetailsScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.CarDetails.CarDetailsViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Client.Checkout.CheckoutScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.Checkout.CheckoutViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Client.ConfirmationPayment.ConfirmationPaymentScreen
 import com.Proyecto.coffeepalace.ui.Screens.Client.EntryPoints.EntryPointsScreen
 import com.Proyecto.coffeepalace.ui.Screens.Client.GetStarted.GetStartedScreen
 import com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered.HomeFiltered
+import com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered.HomeFilteredViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Client.HomePage.HomePage
+import com.Proyecto.coffeepalace.ui.Screens.Client.HomePage.HomePageViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Client.PlaceOrderDetails.PlaceOrderDetailsScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.PlaceOrderDetails.PlaceOrderDetailsViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Client.Profile.ProfileScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.Profile.ProfileViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Seller.Category.CategoryScreen
 import com.Proyecto.coffeepalace.ui.Screens.Seller.Category.CategoryViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Seller.HomeSeller.HomeSellerScreen
@@ -51,6 +59,9 @@ fun NavGraph(
 
     val navigateToProfileScreen = { navController.navigate(Screens.ProfileClient.route) }
     val navigateToCarDetails = { navController.navigate(Screens.CarDetailsClient.route) }
+    fun navigateToPlaceOrderDetails(orderId: Long) {
+        navController.navigate("${Screens.OrderDetailsClient.route}/$orderId")
+    }
 
     NavHost(navController = navController, startDestination = Screens.EntryPoints.route) {
 
@@ -66,29 +77,39 @@ fun NavGraph(
 
         // Clientes
         composable(Screens.HomeClient.route) {
+            val viewmoModel: HomePageViewModel = viewModel()
             CoffeePalaceScaffold(
                 navigateToProfileScreen = navigateToProfileScreen,
                 navigateToCarDetails = navigateToCarDetails,
                 content = { innerPadding ->
                     HomePage(
                         modifier = Modifier.padding(innerPadding),
-                        navigateToHomeFiltered = { filteredType ->
-                            navController.navigate(Screens.HomeFilteredClient.route)
+                        homeViewModel = viewmoModel,
+                        navigateToHomeFiltered = { categoryId ->
+                            navController.navigate("${Screens.HomeFilteredClient.route}/$categoryId")
                         }
                     )
                 })
         }
-        composable(Screens.HomeFilteredClient.route) {
+        composable(
+            route = "${Screens.HomeFilteredClient.route}/{categoryId}",
+            arguments = listOf(navArgument("categoryId") { type = NavType.LongType })
+        ) { entry ->
+            val categoryId = entry.arguments?.getLong("categoryId")
+            val viewModel: HomeFilteredViewModel = viewModel()
             CoffeePalaceScaffold(
                 navigateToProfileScreen = navigateToProfileScreen,
                 navigateToCarDetails = navigateToCarDetails,
                 content = { innerPadding ->
                     HomeFiltered(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        categoryId = categoryId,
+                        viewModel = viewModel
                     )
                 })
         }
         composable(Screens.ProfileClient.route) {
+            val viewModel: ProfileViewModel = viewModel()
             CoffeePalaceScaffold(
                 navigateToCarDetails = navigateToCarDetails,
                 topBar = {
@@ -98,11 +119,13 @@ fun NavGraph(
                 },
                 content = { innerPadding ->
                     ProfileScreen(
-                        modifier = Modifier.padding(innerPadding)
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel = viewModel
                     )
                 })
         }
         composable(Screens.CarDetailsClient.route) {
+            val viewModel: CarDetailsViewModel = viewModel()
             CoffeePalaceScaffold(
                 navigateToProfileScreen = navigateToProfileScreen,
                 topBar = {
@@ -113,11 +136,16 @@ fun NavGraph(
                 content = { innerPadding ->
                     CarDetailsScreen(
                         modifier = Modifier.padding(innerPadding),
+                        viewModel = viewModel,
                         navigateToCheckout = { navController.navigate(Screens.CheckoutClient.route) },
+                        navigateToOrderDetails = { orderId ->
+                            navigateToPlaceOrderDetails(orderId)
+                        }
                     )
                 })
         }
         composable(Screens.CheckoutClient.route) {
+            val viewModel: CheckoutViewModel = viewModel()
             CoffeePalaceScaffold(
                 navigateToProfileScreen = navigateToProfileScreen,
                 navigateToCarDetails = navigateToCarDetails,
@@ -129,11 +157,17 @@ fun NavGraph(
                 content = { innerPadding ->
                     CheckoutScreen(
                         modifier = Modifier.padding(innerPadding),
-                        navigateToPayment = { navController.navigate(Screens.ConfirmationPaymentClient.route) }
+                        viewModel = viewModel,
+                        navigateToPayment = { navController.navigate(Screens.ConfirmationPaymentClient.route) },
                     )
                 })
         }
-        composable(Screens.OrderDetailsClient.route) {
+        composable(
+            route = "${Screens.HomeFilteredClient.route}/{productId}",
+            arguments = listOf(navArgument("productId") { type = NavType.LongType })
+        ) { entry ->
+            val productId = entry.arguments?.getLong("productId")
+            val viewModel: PlaceOrderDetailsViewModel = viewModel()
             CoffeePalaceScaffold(
                 navigateToProfileScreen = navigateToProfileScreen,
                 navigateToCarDetails = navigateToCarDetails,
@@ -145,8 +179,9 @@ fun NavGraph(
                 content = { innerPadding ->
                     PlaceOrderDetailsScreen(
                         modifier = Modifier.padding(innerPadding),
-
-                        )
+                        viewModel = viewModel,
+                        productId = productId
+                    )
                 })
         }
         composable(Screens.ConfirmationPaymentClient.route) {

@@ -1,4 +1,4 @@
-  package com.Proyecto.coffeepalace.Data.Model
+package com.Proyecto.coffeepalace.Data.Model
 
 data class Anuncio(
     val id: Int,

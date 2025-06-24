@@ -1,6 +1,6 @@
 package com.Proyecto.coffeepalace.Data.Model
 
-data class ProductoDTO (
+data class ProductoDTO(
     val id: String,
     val name: String,
     val description: String,
