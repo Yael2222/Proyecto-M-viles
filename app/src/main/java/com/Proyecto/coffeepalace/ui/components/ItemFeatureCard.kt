@@ -27,22 +27,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.Proyecto.coffeepalace.Data.Model.ItemFeatureModel
-import com.Proyecto.coffeepalace.Data.Model.toFilteredType
-import com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered.FilteredTypes
-import com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered.toDomain
+import com.Proyecto.coffeepalace.Data.Model.categoria
 import com.Proyecto.coffeepalace.ui.theme.black
 
 @Composable
 fun FeaturesLazyRow(
     modifier: Modifier = Modifier,
-    items: List<FilteredTypes>,
-    navigateToHomeFiltered: (FilteredTypes) -> Unit
+    categories: List<categoria>,
+    navigateToHomeFiltered: (Long) -> Unit
 ) {
     LazyRow(
         modifier = modifier
@@ -51,9 +47,9 @@ fun FeaturesLazyRow(
             .background(Color.White),
         contentPadding = PaddingValues(horizontal = 16.dp)
     ) {
-        items(items) { itemFeature ->
+        items(categories) { category ->
             FeatureItemCard(
-                itemFeature = itemFeature.toDomain(),
+                category = category,
                 modifier = Modifier.padding(end = 8.dp),
                 navigateToHomeFiltered = navigateToHomeFiltered
             )
@@ -63,15 +59,15 @@ fun FeaturesLazyRow(
 
 @Composable
 fun FeatureItemCard(
-    itemFeature: ItemFeatureModel,
+    category: categoria,
     modifier: Modifier = Modifier,
-    navigateToHomeFiltered: (FilteredTypes) -> Unit
+    navigateToHomeFiltered: (Long) -> Unit
 
 ) {
     Card(
         modifier = modifier
-            .clickable{
-                navigateToHomeFiltered(itemFeature.toFilteredType() ?: FilteredTypes.DRINKS)
+            .clickable {
+                navigateToHomeFiltered(category.id)
             }
             .height(150.dp)
             .width(110.dp),
@@ -91,7 +87,7 @@ fun FeatureItemCard(
         ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(itemFeature.image)
+                    .data("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiBqRLIZq2zTqKFNPt5wAmVzDiePmUnp0KvQ&s")
                     .crossfade(true)
                     .build(),
                 contentDescription = "Product Image",
@@ -104,7 +100,7 @@ fun FeatureItemCard(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 modifier = Modifier.height(50.dp),
-                text = itemFeature.title,
+                text = category.nombre,
                 style = MaterialTheme.typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 color = black,
@@ -113,10 +109,4 @@ fun FeatureItemCard(
             )
         }
     }
-}
-
-@Composable
-@Preview(showSystemUi = true)
-fun ItemFeatureCardPreview() {
-//    FeaturesLazyRow(listOf<ItemFeatureModel>())
 }

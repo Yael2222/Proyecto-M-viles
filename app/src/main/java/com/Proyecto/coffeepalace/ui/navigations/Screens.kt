@@ -91,39 +91,7 @@ fun NavGraph(
                     )
                 })
         }
-        composable(
-            route = "${Screens.HomeFilteredClient.route}/{categoryId}",
-            arguments = listOf(navArgument("categoryId") { type = NavType.LongType })
-        ) { entry ->
-            val categoryId = entry.arguments?.getLong("categoryId")
-            val viewModel: HomeFilteredViewModel = viewModel()
-            CoffeePalaceScaffold(
-                navigateToProfileScreen = navigateToProfileScreen,
-                navigateToCarDetails = navigateToCarDetails,
-                content = { innerPadding ->
-                    HomeFiltered(
-                        modifier = Modifier.padding(innerPadding),
-                        categoryId = categoryId,
-                        viewModel = viewModel
-                    )
-                })
-        }
-        composable(Screens.ProfileClient.route) {
-            val viewModel: ProfileViewModel = viewModel()
-            CoffeePalaceScaffold(
-                navigateToCarDetails = navigateToCarDetails,
-                topBar = {
-                    BackAppBar(title = "Profile", onBackClick = {
-                        navController.popBackStack()
-                    })
-                },
-                content = { innerPadding ->
-                    ProfileScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        viewModel = viewModel
-                    )
-                })
-        }
+
         composable(Screens.CarDetailsClient.route) {
             val viewModel: CarDetailsViewModel = viewModel()
             CoffeePalaceScaffold(
@@ -144,46 +112,7 @@ fun NavGraph(
                     )
                 })
         }
-        composable(Screens.CheckoutClient.route) {
-            val viewModel: CheckoutViewModel = viewModel()
-            CoffeePalaceScaffold(
-                navigateToProfileScreen = navigateToProfileScreen,
-                navigateToCarDetails = navigateToCarDetails,
-                topBar = {
-                    BackAppBar(title = "Checkout", onBackClick = {
-                        navController.popBackStack()
-                    })
-                },
-                content = { innerPadding ->
-                    CheckoutScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        viewModel = viewModel,
-                        navigateToPayment = { navController.navigate(Screens.ConfirmationPaymentClient.route) },
-                    )
-                })
-        }
-        composable(
-            route = "${Screens.HomeFilteredClient.route}/{productId}",
-            arguments = listOf(navArgument("productId") { type = NavType.LongType })
-        ) { entry ->
-            val productId = entry.arguments?.getLong("productId")
-            val viewModel: PlaceOrderDetailsViewModel = viewModel()
-            CoffeePalaceScaffold(
-                navigateToProfileScreen = navigateToProfileScreen,
-                navigateToCarDetails = navigateToCarDetails,
-                topBar = {
-                    BackAppBar(title = "Details", onBackClick = {
-                        navController.popBackStack()
-                    })
-                },
-                content = { innerPadding ->
-                    PlaceOrderDetailsScreen(
-                        modifier = Modifier.padding(innerPadding),
-                        viewModel = viewModel,
-                        productId = productId
-                    )
-                })
-        }
+
         composable(Screens.ConfirmationPaymentClient.route) {
             CoffeePalaceScaffold(
                 navigateToProfileScreen = navigateToProfileScreen,
