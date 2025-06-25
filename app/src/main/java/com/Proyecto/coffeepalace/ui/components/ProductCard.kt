@@ -110,27 +110,27 @@ fun ProductCard(
                         color = black
                     )
 
-                    Spacer(modifier = Modifier.height(4.dp))
-
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        RatingBar(
-                            rating = rating,
-                            stars = 5,
-                            starSize = 16.dp,
-                            activeColor = Color(0xFFFFD700),
-                            inactiveColor = Color.LightGray
-                        )
-
-                        Spacer(modifier = Modifier.width(4.dp))
-
-                        Text(
-                            text = "${(reviewCount / 1000f).formatDecimal()}K",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = black
-                        )
-                    }
+//                    Spacer(modifier = Modifier.height(4.dp))
+//                     Commented not used
+//                    Row(
+//                        verticalAlignment = Alignment.CenterVertically
+//                    ) {
+//                        RatingBar(
+//                            rating = rating,
+//                            stars = 5,
+//                            starSize = 16.dp,
+//                            activeColor = Color(0xFFFFD700),
+//                            inactiveColor = Color.LightGray
+//                        )
+//
+//                        Spacer(modifier = Modifier.width(4.dp))
+//
+//                        Text(
+//                            text = "${(reviewCount / 1000f).formatDecimal()}K",
+//                            style = MaterialTheme.typography.labelSmall,
+//                            color = black
+//                        )
+//                    }
                 }
             }
         }

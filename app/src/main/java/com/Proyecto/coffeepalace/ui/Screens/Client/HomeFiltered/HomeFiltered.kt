@@ -13,9 +13,13 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -27,8 +31,18 @@ import com.Proyecto.coffeepalace.ui.theme.LightGray
 @Composable
 fun HomeFiltered(
     modifier: Modifier = Modifier,
+    categoryId: Long? = null,
+    viewModel: HomeFilteredViewModel
 ) {
-    LazyVerticalGrid (
+    LaunchedEffect(categoryId) {
+        if (categoryId != null)
+            viewModel.loadProducts(categoryId)
+    }
+
+    val categoryAndProducts by viewModel.productsWithCategory.collectAsState()
+    val allProducts by viewModel.allProducts.collectAsState()
+
+    LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier
             .fillMaxSize()
@@ -37,23 +51,42 @@ fun HomeFiltered(
         verticalArrangement = Arrangement.Top,
         horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        item (
-            span = { GridItemSpan(2)}
-        ){
-            HomeTitle("Ice Coffee", modifier = Modifier.fillMaxWidth().padding(start = 16.dp))
-            Spacer(Modifier.height(5.dp))
-        }
 
-        items(15) { index ->
-            ProductCard(
-                name = "Café Americano",
-                description = "Un café americano clásico y delicioso.",
-                price = "$2.50",
-                rating = 4.5f,
-                reviewCount = 1200,
-                imageRes = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiBqRLIZq2zTqKFNPt5wAmVzDiePmUnp0KvQ&s"
-            )
+        if (categoryAndProducts != null)
+            item(
+                span = { GridItemSpan(2) }
+            ) {
+                HomeTitle(
+                    categoryAndProducts!!.category.nombre, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp)
+                )
+                Spacer(Modifier.height(5.dp))
+            }
 
-        }
+
+        if (categoryAndProducts != null)
+            items(categoryAndProducts!!.products) { product ->
+                ProductCard(
+                    name = product.nombre,
+                    description = product.descripcion,
+                    price = String.format("%.2f", product.precio),
+                    rating = 4.5f,
+                    reviewCount = 1200,
+                    imageRes = product.imagen
+                )
+
+            }
+        else if (allProducts.isNotEmpty())
+            items(allProducts) { product ->
+                ProductCard(
+                    name = product.nombre,
+                    description = product.descripcion,
+                    price = String.format("%.2f", product.precio),
+                    rating = 4.5f,
+                    reviewCount = 1200,
+                    imageRes = product.imagen
+                )
+            }
     }
 }

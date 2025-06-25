@@ -25,6 +25,15 @@ class DaoCategoryImpl : DaoCategory {
             .decodeList<categoria>()
     }
 
+    override suspend fun getCategoryById(id: Long): categoria? {
+        return supabase.postgrest
+            .from("categoria")
+            .select() {
+                eq("id", id)
+            }
+            .decodeSingle<categoria>()
+    }
+
 
     override suspend fun addCategory(nombre: String): Boolean {
         return try {

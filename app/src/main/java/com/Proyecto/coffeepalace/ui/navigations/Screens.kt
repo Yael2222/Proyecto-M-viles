@@ -92,6 +92,24 @@ fun NavGraph(
                 })
         }
 
+        composable(
+            route = "${Screens.HomeFilteredClient.route}/{categoryId}",
+            arguments = listOf(navArgument("categoryId") { type = NavType.LongType })
+        ) { entry ->
+            val categoryId = entry.arguments?.getLong("categoryId")
+            val viewModel: HomeFilteredViewModel = viewModel()
+            CoffeePalaceScaffold(
+                navigateToProfileScreen = navigateToProfileScreen,
+                navigateToCarDetails = navigateToCarDetails,
+                content = { innerPadding ->
+                    HomeFiltered(
+                        modifier = Modifier.padding(innerPadding),
+                        categoryId = categoryId,
+                        viewModel = viewModel
+                    )
+                })
+        }
+
         composable(Screens.CarDetailsClient.route) {
             val viewModel: CarDetailsViewModel = viewModel()
             CoffeePalaceScaffold(
