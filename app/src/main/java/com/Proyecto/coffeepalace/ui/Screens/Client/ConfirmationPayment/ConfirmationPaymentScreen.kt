@@ -38,7 +38,10 @@ fun ConfirmationPaymentScreen(
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(8.dp))
-            InputFieldEmail()
+            InputFieldEmail(
+                email = "",
+                updateEmail = {}
+            )
             Spacer(modifier = Modifier.height(45.dp))
             Text(
                 text = "Lorem ipsum dolor sit amet, consectetur adipiscing " +

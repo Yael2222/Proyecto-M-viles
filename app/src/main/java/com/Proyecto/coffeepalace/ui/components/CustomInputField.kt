@@ -148,12 +148,13 @@ fun CustomInputField(
 }
 
 @Composable
-fun InputFieldEmail() {
-    var email by remember { mutableStateOf("") }
-
+fun InputFieldEmail(
+    email: String,
+    updateEmail: (String) -> Unit
+) {
     CustomInputField(
         value = email,
-        onValueChange = { email = it },
+        onValueChange = updateEmail,
         label = "Email Address",
         inputType = InputType.EMAIL,
         placeholder = "ejemplo@dominio.com",
@@ -164,12 +165,14 @@ fun InputFieldEmail() {
 }
 
 @Composable
-fun InputFieldPassword() {
-    var password by remember { mutableStateOf("") }
+fun InputFieldPassword(
+    password: String,
+    updatePassword: (String) -> Unit
+) {
 
     CustomInputField(
         value = password,
-        onValueChange = { password = it },
+        onValueChange = updatePassword,
         label = "Password",
         inputType = InputType.PASSWORD,
         placeholder = "Mínimo 8 caracteres"
@@ -179,13 +182,14 @@ fun InputFieldPassword() {
 @Composable
 fun InputFieldText(
     label: String,
-    placeholder: String
+    placeholder: String,
+    text: String,
+    updateText: (String) -> Unit
 ) {
-    var text by remember { mutableStateOf("") }
 
     CustomInputField(
         value = text,
-        onValueChange = { text = it },
+        onValueChange = updateText,
         label = label,
         inputType = InputType.TEXT,
         placeholder = placeholder
@@ -193,12 +197,14 @@ fun InputFieldText(
 }
 
 @Composable
-fun InputFieldNumber() {
-    var phone by remember { mutableStateOf("") }
+fun InputFieldNumber(
+    number: String,
+    updateNumber: (String) -> Unit
+) {
 
     CustomInputField(
-        value = phone,
-        onValueChange = { phone = it },
+        value = number,
+        onValueChange = updateNumber,
         label = "Cell Phone",
         inputType = InputType.PHONE,
         placeholder = "12345678",
