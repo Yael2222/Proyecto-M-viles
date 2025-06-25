@@ -113,6 +113,25 @@ fun NavGraph(
                 })
         }
 
+        composable(Screens.CheckoutClient.route) {
+            val viewModel: CheckoutViewModel = viewModel()
+            CoffeePalaceScaffold(
+                navigateToProfileScreen = navigateToProfileScreen,
+                navigateToCarDetails = navigateToCarDetails,
+                topBar = {
+                    BackAppBar(title = "Checkout", onBackClick = {
+                        navController.popBackStack()
+                    })
+                },
+                content = { innerPadding ->
+                    CheckoutScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel = viewModel,
+                        navigateToPayment = { navController.navigate(Screens.ConfirmationPaymentClient.route) },
+                    )
+                })
+        }
+
         composable(Screens.ConfirmationPaymentClient.route) {
             CoffeePalaceScaffold(
                 navigateToProfileScreen = navigateToProfileScreen,

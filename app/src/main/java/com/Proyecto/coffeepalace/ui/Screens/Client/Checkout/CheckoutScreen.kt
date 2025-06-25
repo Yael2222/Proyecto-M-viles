@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,8 +26,10 @@ import com.Proyecto.coffeepalace.ui.theme.LightGray200
 @Composable
 fun CheckoutScreen(
     modifier: Modifier = Modifier,
-    navigateToPayment: () -> Unit = {}
+    viewModel: CheckoutViewModel,
+    navigateToPayment: () -> Unit = {},
 ) {
+    val total by viewModel.total.collectAsState()
     var selectedMethod by remember { mutableStateOf<String?>(null) }
     LazyColumn(
         modifier = modifier
@@ -37,9 +40,9 @@ fun CheckoutScreen(
     ) {
         item {
             OrderSummary(
-                orderAmount = "$4.99",
-                shippingAmount = "$4.99",
-                totalAmount = "$9.98",
+                orderAmount = String.format("%.2f", total.subTotal),
+                shippingAmount = String.format("%.2f", total.shipping),
+                totalAmount = String.format("%.2f", total.total),
                 onPaymentClick = {}
             )
         }
@@ -61,7 +64,9 @@ fun CheckoutScreen(
             CustomButton(
                 text = "Continue",
                 onClick = navigateToPayment,
-                modifier = Modifier.fillMaxWidth().padding(20.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp)
             )
         }
     }
