@@ -110,6 +110,23 @@ fun NavGraph(
                 })
         }
 
+        composable(Screens.ProfileClient.route) {
+            val viewModel: ProfileViewModel = viewModel()
+            CoffeePalaceScaffold(
+                navigateToCarDetails = navigateToCarDetails,
+                topBar = {
+                    BackAppBar(title = "Profile", onBackClick = {
+                        navController.popBackStack()
+                    })
+                },
+                content = { innerPadding ->
+                    ProfileScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel = viewModel
+                    )
+                })
+        }
+
         composable(Screens.CarDetailsClient.route) {
             val viewModel: CarDetailsViewModel = viewModel()
             CoffeePalaceScaffold(

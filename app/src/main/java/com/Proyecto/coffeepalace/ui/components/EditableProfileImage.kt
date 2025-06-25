@@ -18,12 +18,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.Proyecto.coffeepalace.R
 
 @Composable
 fun EditableProfileImage(
-    image: Painter,
+    image: String?,
     size: Dp = 120.dp,
     borderColor: Color = MaterialTheme.colorScheme.primary,
     borderWidth: Dp = 2.dp,
@@ -32,10 +36,12 @@ fun EditableProfileImage(
     Box(
         contentAlignment = Alignment.BottomEnd
     ) {
-        Image(
-            painter = image,
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(image ?: R.drawable.profile_icon)
+                .crossfade(true)
+                .build(),
             contentDescription = "Foto de perfil",
-            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(size)
                 .clip(CircleShape)
@@ -43,7 +49,8 @@ fun EditableProfileImage(
                     width = borderWidth,
                     color = borderColor,
                     shape = CircleShape
-                )
+                ),
+            contentScale = ContentScale.Crop
         )
 
         Box(
