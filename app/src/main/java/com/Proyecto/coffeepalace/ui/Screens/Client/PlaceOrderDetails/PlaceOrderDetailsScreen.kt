@@ -11,6 +11,9 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,20 +28,29 @@ import com.Proyecto.coffeepalace.ui.theme.LightGray400
 @Composable
 fun PlaceOrderDetailsScreen(
     modifier: Modifier = Modifier,
+    viewModel: PlaceOrderDetailsViewModel,
+    productId: Long?
 ) {
+    LaunchedEffect(productId) {
+        if (productId != null)
+            viewModel.getOwnShoppingCarById(productId)
+    }
+    val carAndProduct by viewModel.orderDetails.collectAsState()
     Column(
         modifier = modifier
             .background(LightGray200)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OrderDetailsItem(
-            productName = "Devil Eggs",
-            imageRes = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiBqRLIZq2zTqKFNPt5wAmVzDiePmUnp0KvQ&s",
-            initialQuantity = 2,
-            orderDate = "2023-10-01",
-            onQuantityChange = { },
-        )
+        if (carAndProduct != null)
+            OrderDetailsItem(
+                productName = carAndProduct?.producto?.nombre ?: "Devil Eggs",
+                imageRes = carAndProduct?.producto?.imagen
+                    ?: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiBqRLIZq2zTqKFNPt5wAmVzDiePmUnp0KvQ&s",
+                initialQuantity = 1,
+                orderDate = "2023-10-01",
+                onQuantityChange = { },
+            )
         Spacer(modifier = Modifier.height(32.dp))
         Column(
             modifier = Modifier
@@ -54,7 +66,7 @@ fun PlaceOrderDetailsScreen(
 
             RowItemDescription(
                 title = "Order Amounts",
-                description = "$ 4.99",
+                description = String.format("%.2f", carAndProduct?.producto?.precio ?: 0.0),
                 descriptionColor = Color.Black,
                 descriptionFontWeight = FontWeight.Bold,
                 textStyle = MaterialTheme.typography.bodySmall,
@@ -81,7 +93,7 @@ fun PlaceOrderDetailsScreen(
         RowItemDescription(
             title = "Order Total",
             titleColor = Color.Black,
-            description = "$ 4.99",
+            description = String.format("%.2f", carAndProduct?.producto?.precio ?: 0.0),
             descriptionColor = Color.Black,
             descriptionFontWeight = FontWeight.Bold,
             textStyle = MaterialTheme.typography.titleMedium,

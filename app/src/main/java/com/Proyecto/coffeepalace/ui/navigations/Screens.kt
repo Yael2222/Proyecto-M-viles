@@ -150,6 +150,29 @@ fun NavGraph(
                 })
         }
 
+        composable(
+            route = "${Screens.HomeFilteredClient.route}/{productId}",
+            arguments = listOf(navArgument("productId") { type = NavType.LongType })
+        ) { entry ->
+            val productId = entry.arguments?.getLong("productId")
+            val viewModel: PlaceOrderDetailsViewModel = viewModel()
+            CoffeePalaceScaffold(
+                navigateToProfileScreen = navigateToProfileScreen,
+                navigateToCarDetails = navigateToCarDetails,
+                topBar = {
+                    BackAppBar(title = "Details", onBackClick = {
+                        navController.popBackStack()
+                    })
+                },
+                content = { innerPadding ->
+                    PlaceOrderDetailsScreen(
+                        modifier = Modifier.padding(innerPadding),
+                        viewModel = viewModel,
+                        productId = productId
+                    )
+                })
+        }
+
         composable(Screens.ConfirmationPaymentClient.route) {
             CoffeePalaceScaffold(
                 navigateToProfileScreen = navigateToProfileScreen,
