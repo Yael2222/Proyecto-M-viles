@@ -3,24 +3,38 @@ package com.Proyecto.coffeepalace.ui.theme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.isSystemInDarkTheme
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF4A2C20),
+    primary = BrownCoffee,
     onPrimary = Color.White,
-    secondary = Color(0xFFB55B00),
+    secondary = BrownCoffee,
     onSecondary = Color.White,
-    tertiary = Color(0xFFD7A86E),
+    tertiary = LightBrown,
     background = Color.White,
-    onBackground = Color(0xFF2E1B10),
     surface = Color.White,
-    onSurface = Color(0xFF2E1B10)
+    onBackground = Color.Black,
+    onSurface = Color.Black,
+)
+
+private val DarkColorScheme = darkColorScheme(
+    primary = BrownCoffee,
+    onPrimary = Color.White,
+    secondary = BrownCoffee,
+    onSecondary = Color.White,
+    tertiary = LightBrown,
+    background = Color(0xFF1C1C1C),
+    surface = Color(0xFF121212),
+    onBackground = Color.White,
+    onSurface = Color.White,
 )
 
 @Composable
 fun CoffeePalaceTheme(
+    useDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colorScheme = LightColorScheme
+    val colorScheme = if (useDarkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(
         colorScheme = colorScheme,
