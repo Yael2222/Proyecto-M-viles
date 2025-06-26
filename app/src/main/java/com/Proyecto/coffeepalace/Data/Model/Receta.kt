@@ -1,10 +1,12 @@
 package com.Proyecto.coffeepalace.Data.Model
 
-data class Receta (
-    val id: Int,
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class receta (
+    var id: Long = 0,
     val nombre: String,
     val descripcion: String,
     val imagen: String,
-    val ingredientes: String,
-    val pasos: String,
+    val instrucciones: String,
 )
