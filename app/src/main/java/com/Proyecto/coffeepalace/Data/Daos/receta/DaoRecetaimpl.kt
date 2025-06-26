@@ -1,4 +1,3 @@
-// src/main/java/com/Proyecto/coffeepalace/Data/Daos/receta/DaoRecetaImpl.kt
 package com.Proyecto.coffeepalace.Data.Daos.receta
 
 import com.Proyecto.coffeepalace.Data.Model.ingrediente

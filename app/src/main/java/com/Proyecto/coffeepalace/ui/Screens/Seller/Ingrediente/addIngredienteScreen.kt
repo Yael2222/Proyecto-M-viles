@@ -15,13 +15,17 @@ import androidx.navigation.NavHostController
 import com.Proyecto.coffeepalace.ui.theme.BrownCoffee
 import kotlinx.coroutines.launch
 
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun addIngredienteScreen(
     viewModel: addIngredienteViewModel,
     navController: NavHostController
 ) {
-    val ingredientes by viewModel.ingredientes.collectAsState()
+
+    val ingredientes by viewModel.ingredientes.collectAsState() // Usa el 'viewModel' del parámetro
     var showDialog by remember { mutableStateOf(false) }
     var newIngrediente by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
@@ -55,8 +59,8 @@ fun addIngredienteScreen(
                         Text(text = ingrediente.nombre)
                         IconButton(onClick = {
                             coroutineScope.launch {
-                                ingrediente.id.let {
-                                    val deleted = viewModel.deleteIngrediente(it)
+                                ingrediente.id?.let { // Usar ?.let para ID nullable
+                                    val deleted = viewModel.deleteIngrediente(it) // Usa el 'viewModel' del parámetro
                                     // Nada extra aquí, el ViewModel ya recarga la lista
                                 }
                             }
@@ -107,7 +111,7 @@ fun addIngredienteScreen(
                         TextButton(onClick = {
                             if (newIngrediente.isNotBlank()) {
                                 coroutineScope.launch {
-                                    viewModel.addIngrediente(newIngrediente.trim())
+                                    viewModel.addIngrediente(newIngrediente.trim()) // Usa el 'viewModel' del parámetro
                                     newIngrediente = ""
                                     showDialog = false
                                 }

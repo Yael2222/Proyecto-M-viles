@@ -14,14 +14,26 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.Proyecto.coffeepalace.ui.theme.BrownCoffee
 import kotlinx.coroutines.launch
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.Proyecto.coffeepalace.Data.Network.ApiService // Ya no necesitas estas 3 importaciones si el ViewModel se pasa desde fuera
+import com.Proyecto.coffeepalace.Data.Repository.CategoryRepository
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import com.Proyecto.coffeepalace.Data.Network.NetworkConfig
+import androidx.lifecycle.viewmodel.compose.viewModel // Ya no necesitas esta importación
+import com.Proyecto.coffeepalace.ui.Screens.Seller.Product.DeleteProductViewModel // Esta parece ser una importación irrelevante aquí
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryScreen(
-    viewModel: CategoryViewModel,
+    viewModel: CategoryViewModel, // <--- Este es el ViewModel que usaremos
     navController: NavHostController
 ) {
-    val categories by viewModel.categories.collectAsState()
+
+
+    val categories by viewModel.categories.collectAsState() // Usa el 'viewModel' del parámetro
     var showDialog by remember { mutableStateOf(false) }
     var newCategory by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
@@ -54,7 +66,7 @@ fun CategoryScreen(
                         IconButton(onClick = {
                             category.id?.let {
                                 coroutineScope.launch {
-                                    viewModel.deleteCategory(it)
+                                    viewModel.deleteCategory(it) // Usa el 'viewModel' del parámetro
                                 }
                             }
                         }) {
@@ -80,7 +92,7 @@ fun CategoryScreen(
                 Text("+ Add Category")
             }
             Text(
-                text = "* Si no se puede borrar, es porque está asignado a una producto. borrar primero el producto",
+                text = "* Si no se puede borrar, es porque está asignado a un producto. borrar primero el producto",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Red
             )
@@ -101,7 +113,7 @@ fun CategoryScreen(
                         TextButton(onClick = {
                             if (newCategory.isNotBlank()) {
                                 coroutineScope.launch {
-                                    viewModel.addCategory(newCategory.trim())
+                                    viewModel.addCategory(newCategory.trim()) // Usa el 'viewModel' del parámetro
                                     newCategory = ""
                                     showDialog = false
                                 }

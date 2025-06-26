@@ -1,4 +1,3 @@
-// src/main/java/com/Proyecto/coffeepalace/ui/Screens/Seller/Receta/DeleteRecetaViewModel.kt
 package com.Proyecto.coffeepalace.ui.Screens.Seller.Receta
 
 import androidx.lifecycle.ViewModel
@@ -7,7 +6,7 @@ import com.Proyecto.coffeepalace.Data.Daos.receta.DaoReceta
 import com.Proyecto.coffeepalace.Data.Daos.receta.DaoRecetaImpl
 import com.Proyecto.coffeepalace.Data.Model.receta
 import com.Proyecto.coffeepalace.Data.Model.ingrediente
-import com.Proyecto.coffeepalace.Data.Model.RecetaWithIngredientes // Importa el nuevo modelo de presentación
+import com.Proyecto.coffeepalace.Data.Model.RecetaWithIngredientes
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +16,6 @@ class DeleteRecetaViewModel(
     private val daoReceta: DaoReceta = DaoRecetaImpl()
 ) : ViewModel() {
 
-    // Ahora el StateFlow es de RecetaWithIngredientes
     private val _recetasWithIngredientes = MutableStateFlow<List<RecetaWithIngredientes>>(emptyList())
     val recetasWithIngredientes: StateFlow<List<RecetaWithIngredientes>> = _recetasWithIngredientes.asStateFlow()
 

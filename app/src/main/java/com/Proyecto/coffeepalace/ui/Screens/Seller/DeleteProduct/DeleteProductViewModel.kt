@@ -1,56 +1,52 @@
-// Archivo: com/Proyecto/coffeepalace/ui/Screens/Seller/Product/DeleteProductViewModel.kt
 package com.Proyecto.coffeepalace.ui.Screens.Seller.Product
 
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.Proyecto.coffeepalace.Data.Daos.product.DaoProductImpl
+import com.Proyecto.coffeepalace.Data.Model.categoria
 import com.Proyecto.coffeepalace.Data.Model.producto
-import com.Proyecto.coffeepalace.Data.Model.categoria // Importa la data class categoria
+import com.Proyecto.coffeepalace.Data.Repository.ProductRepository
 import kotlinx.coroutines.launch
 
-class DeleteProductViewModel : ViewModel() {
-    private val dao = DaoProductImpl()
+class DeleteProductViewModel(private val productRepository: ProductRepository) : ViewModel() {
 
     var productos by mutableStateOf<List<producto>>(emptyList())
         private set
 
-    var categorias by mutableStateOf<List<categoria>>(emptyList()) // Nuevo estado para las categorías
+    var categorias by mutableStateOf<List<categoria>>(emptyList())
         private set
 
     var mensaje by mutableStateOf("")
         private set
 
     init {
-        loadData() // Llama a una función que carga tanto productos como categorías
+        loadData()
     }
 
     private fun loadData() {
         viewModelScope.launch {
-            // Cargar categorías primero
             try {
-                categorias = dao.getCategoriasProducto()
+                categorias = productRepository.getCategoriasProducto()
             } catch (e: Exception) {
                 mensaje = "Error al cargar categorías: ${e.message}"
-                println("Error al cargar categorías: ${e.message}")
+                println(mensaje)
             }
 
-            // Luego cargar productos
             try {
-                productos = dao.getProductos()
+                productos = productRepository.getProductos()
             } catch (e: Exception) {
                 mensaje = "Error al cargar productos: ${e.message}"
-                println("Error al cargar productos: ${e.message}")
+                println(mensaje)
             }
         }
     }
 
     fun deleteProduct(id: Long) {
         viewModelScope.launch {
-            val deleted = dao.deleteProducto(id)
+            val deleted = productRepository.deleteProducto(id)
             if (deleted) {
                 mensaje = "Producto eliminado con éxito"
-                loadData() // Recargar ambas listas para asegurar consistencia
+                loadData()
             } else {
                 mensaje = "Error al eliminar el producto"
             }

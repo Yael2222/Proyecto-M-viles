@@ -1,43 +1,37 @@
 package com.Proyecto.coffeepalace.ui.Screens.Seller.ViewUsers
 
-import com.Proyecto.coffeepalace.Data.Daos.usuario.DaoUsuarioImpl
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.Proyecto.coffeepalace.Data.Daos.usuario.DaoUsuario
 import com.Proyecto.coffeepalace.Data.Model.usuario
+import com.Proyecto.coffeepalace.Data.Repository.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ViewUsersViewModel(
-    private val daoUser: DaoUsuario = DaoUsuarioImpl()
-) : ViewModel() {
+class ViewUsersViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     private val _users = MutableStateFlow<List<usuario>>(emptyList())
-    val users: StateFlow<List<usuario>> = _users.asStateFlow()
+    val users = _users.asStateFlow()
 
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
 
     private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error.asStateFlow()
+    val error = _error.asStateFlow()
 
     init {
-        fetchUsers()
+        loadUsers()
     }
 
-
-    fun fetchUsers() {
+    fun loadUsers() {
         viewModelScope.launch {
             _isLoading.value = true
             _error.value = null
             try {
-                val fetchedUsers = daoUser.getAllUsers()
-                _users.value = fetchedUsers
+                _users.value = userRepository.getAllUsers() // Llama al Repository
             } catch (e: Exception) {
-                _error.value = "Error al cargar usuarios: ${e.message}"
-                println("Error en ViewUsersViewModel: ${e.message}")
+                _error.value = e.message
+                println("Error cargando usuarios en ViewModel: ${e.message}") // Debug
             } finally {
                 _isLoading.value = false
             }

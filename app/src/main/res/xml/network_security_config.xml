@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Permite el tráfico cleartext (HTTP) solo para dominios específicos. -->
+    <!-- Esto es ÚNICAMENTE para desarrollo. En producción, DEBES usar HTTPS. -->
+    <domain-config cleartextTrafficPermitted="true">
+        <!-- Siempre es bueno mantener 10.0.2.2 si también pruebas en emuladores -->
+        <domain includeSubdomains="true">10.0.2.2</domain>
+
+        <!-- ¡AÑADE O ASEGÚRATE DE QUE ESTA LÍNEA ESTÉ PRESENTE CON TU IP CORRECTA! -->
+        <domain includeSubdomains="true">192.168.0.10</domain>
+        <domain includeSubdomains="true">192.168.0.11</domain>
+
+    </domain-config>
+
+    <!-- Si anteriormente usaste <base-config cleartextTrafficPermitted="true">,
+         puedes eliminarla y usar solo <domain-config> para mayor seguridad incluso en desarrollo. -->
+    <!-- <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config> -->
+</network-security-config>

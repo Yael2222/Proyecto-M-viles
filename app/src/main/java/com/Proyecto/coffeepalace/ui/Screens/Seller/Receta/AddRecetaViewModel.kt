@@ -73,7 +73,7 @@ class AddRecetaViewModel : ViewModel() {
 
             val ingredientesIds = ingredientesSeleccionados.map { it.id }
 
-            val exito = dao.addReceta(recetaObj, ingredientesIds)
+            val exito = dao.addReceta(recetaObj, ingredientesIds as List<Long>)
 
             mensaje.value = if (exito) {
                 "Receta agregada con éxito"

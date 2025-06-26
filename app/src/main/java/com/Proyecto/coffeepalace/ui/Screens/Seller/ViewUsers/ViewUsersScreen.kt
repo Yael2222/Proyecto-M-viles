@@ -1,3 +1,4 @@
+// com.Proyecto.coffeepalace.ui.Screens.Seller.ViewUsers/ViewUsersScreen.kt (MODIFICA ESTE ARCHIVO)
 package com.Proyecto.coffeepalace.ui.Screens.Seller.ViewUsers
 
 import androidx.compose.ui.text.style.TextOverflow
@@ -15,17 +16,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.Proyecto.coffeepalace.Data.Model.usuario
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViewUsersScreen(
-    viewModel: ViewUsersViewModel = viewModel(),navController: NavHostController
+    viewModel: ViewUsersViewModel,
+    navController: NavHostController
 ) {
     val users by viewModel.users.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -60,7 +61,7 @@ fun ViewUsersScreen(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 }
-                users.isEmpty() && !isLoading -> {
+                users.isEmpty() && !isLoading && error == null -> { // Añadimos error == null
                     Text(
                         text = "No se encontraron usuarios.",
                         modifier = Modifier.align(Alignment.Center)
@@ -85,9 +86,9 @@ fun UserCard(user: usuario) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .heightIn(min = 100.dp), // Altura mínima para la tarjeta
-        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp), // Sombra más pronunciada
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant) // Color de fondo de la tarjeta
+            .heightIn(min = 100.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
         Row(
             modifier = Modifier

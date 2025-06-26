@@ -22,32 +22,35 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import kotlinx.coroutines.launch
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddProductScreen(
     viewModel: AddProductViewModel,
     navController: NavHostController
 ) {
+
     val name by viewModel.name.collectAsState()
     val price by viewModel.price.collectAsState()
     val description by viewModel.description.collectAsState()
     val selectedCategoryId by viewModel.selectedCategoryId.collectAsState()
     val categorias by viewModel.categorias.collectAsState()
     val saveSuccess by viewModel.saveSuccess.collectAsState()
+    val uploadingImage by viewModel.uploadingImage.collectAsState() // <--- Nuevo estado
 
     var showSavedDialog by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var selectedImageUri by remember { mutableStateOf<Uri?>(null) } // La URI local que Coil previsualiza
 
     val launcher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         if (uri != null) {
-            selectedImageUri = uri
-            viewModel.imageUri.value = uri.toString()
+            selectedImageUri = uri // Almacenar la URI local para previsualizar
+            // No se asigna a viewModel.imageUri.value AQUI, se hará después de la subida.
         }
     }
 
@@ -107,7 +110,7 @@ fun AddProductScreen(
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .menuAnchor() // NECESARIO para que el menú aparezca correctamente
+                        .menuAnchor()
                 )
                 ExposedDropdownMenu(
                     expanded = expanded,
@@ -142,6 +145,7 @@ fun AddProductScreen(
                 Text(" Añadir Imagen")
             }
 
+            // Previsualización de la imagen seleccionada localmente
             selectedImageUri?.let { uri ->
                 val bitmap = remember(uri) {
                     if (Build.VERSION.SDK_INT < 28) {
@@ -158,13 +162,21 @@ fun AddProductScreen(
 
             Button(
                 onClick = {
+                    // ¡CAMBIO AQUÍ! Ahora llama a uploadAndSaveProduct
                     scope.launch {
-                        viewModel.saveProduct()
+                        viewModel.uploadAndSaveProduct(context, selectedImageUri)
                     }
                 },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !uploadingImage // Deshabilitar el botón mientras se sube la imagen
             ) {
-                Text("Añadir producto")
+                if (uploadingImage) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Subiendo Imagen...")
+                } else {
+                    Text("Añadir producto")
+                }
             }
         }
 
@@ -175,6 +187,7 @@ fun AddProductScreen(
                 confirmButton = {
                     TextButton(onClick = {
                         viewModel.resetForm()
+                        selectedImageUri = null // También limpiar la URI local de previsualización
                         showSavedDialog = false
                     }) {
                         Text("OK")

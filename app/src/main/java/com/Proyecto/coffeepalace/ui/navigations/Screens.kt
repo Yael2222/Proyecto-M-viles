@@ -1,7 +1,5 @@
 package com.Proyecto.coffeepalace.ui.navigations
 
-
-
 sealed class Screens(val route: String) {
     object HomeSeller : Screens("home_seller")
     object AddProduct : Screens("add_product")

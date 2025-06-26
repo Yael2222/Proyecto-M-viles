@@ -1,27 +1,25 @@
-// Archivo: com/Proyecto/coffeepalace/ui/Screens/Seller/Product/DeleteProductScreen.kt
 package com.Proyecto.coffeepalace.ui.Screens.Seller.Product
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.foundation.clickable
-import androidx.compose.ui.draw.clip
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.layout.ContentScale
-import coil.compose.AsyncImage
-import androidx.navigation.NavHostController
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import com.Proyecto.coffeepalace.Data.Model.producto
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
 import com.Proyecto.coffeepalace.Data.Model.categoria
-
+import com.Proyecto.coffeepalace.Data.Model.producto
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,11 +64,13 @@ fun DeleteProductScreen(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(productos, key = { it.id }) { producto ->
+                items(productos, key = { it.id ?: 0L }) { producto ->
                     ProductCard(
                         producto = producto,
-                        categorias = categorias, // <-- Nuevo parámetro
-                        onDelete = { viewModel.deleteProduct(producto.id) }
+                        categorias = categorias,
+                        onDelete = {
+                            producto.id?.let { viewModel.deleteProduct(it) }
+                        }
                     )
                 }
             }
@@ -80,7 +80,8 @@ fun DeleteProductScreen(
 
 @Composable
 fun ProductCard(producto: producto, categorias: List<categoria>, onDelete: () -> Unit) {
-    val categoriaNombre = categorias.find { it.id == producto.categoria }?.nombre ?: "Categoría Desconocida"
+    val categoriaNombre = categorias.find { it.id == producto.categoria }?.nombre
+        ?: "Categoría Desconocida"
 
     Card(
         modifier = Modifier
@@ -90,8 +91,7 @@ fun ProductCard(producto: producto, categorias: List<categoria>, onDelete: () ->
             .padding(vertical = 4.dp)
     ) {
         Column(
-            modifier = Modifier
-                .padding(16.dp)
+            modifier = Modifier.padding(16.dp)
         ) {
             AsyncImage(
                 model = producto.imagen,
@@ -108,16 +108,14 @@ fun ProductCard(producto: producto, categorias: List<categoria>, onDelete: () ->
             Text(
                 text = producto.nombre,
                 style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
+                fontWeight = FontWeight.Bold
             )
 
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = producto.descripcion,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                style = MaterialTheme.typography.bodyMedium
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -130,13 +128,11 @@ fun ProductCard(producto: producto, categorias: List<categoria>, onDelete: () ->
                 Text(
                     text = "Precio: $${String.format("%.2f", producto.precio)}",
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.SemiBold,
-                    color = MaterialTheme.colorScheme.primary
+                    fontWeight = FontWeight.SemiBold
                 )
                 Text(
                     text = "Categoría: $categoriaNombre",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    style = MaterialTheme.typography.bodySmall
                 )
             }
 

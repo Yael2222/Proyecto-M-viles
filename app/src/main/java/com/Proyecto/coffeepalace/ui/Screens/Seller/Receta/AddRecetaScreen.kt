@@ -86,7 +86,7 @@ fun AddRecetaScreen(
 
     val scrollState = rememberScrollState()
 
-   
+
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {

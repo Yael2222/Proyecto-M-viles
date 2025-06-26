@@ -22,7 +22,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.Proyecto.coffeepalace.Data.Dummy.Order
 import com.Proyecto.coffeepalace.ui.navigations.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +31,6 @@ fun HomeSellerScreen(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
 
     Scaffold { paddingValues ->
@@ -70,25 +68,8 @@ fun HomeSellerScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Info Cards
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                InfoCard(
-                    title = "Today's Sales",
-                    value = "$${String.format("%.2f", uiState.salesToday)}",
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                InfoCard(
-                    title = "Today's Orders",
-                    value = "${uiState.ordersToday}",
-                    modifier = Modifier.weight(1f)
-                )
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
