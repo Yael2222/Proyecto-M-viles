@@ -2,12 +2,16 @@ package com.Proyecto.coffeepalace.ui.Screens.Login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.Proyecto.coffeepalace.Data.UserPreferences
+import com.Proyecto.coffeepalace.Data.Remote.RetrofitClient
+import com.Proyecto.coffeepalace.Data.Remote.auth.Login.LoginRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.delay
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(
+    private val userPreferences: UserPreferences
+) : ViewModel() {
 
     private val _email = MutableStateFlow("")
     val email: StateFlow<String> = _email
@@ -42,17 +46,21 @@ class LoginViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             _errorMessage.value = null
-            // Simulacion de validación y login
-            delay(1500)
-            if (_email.value.isBlank() || _password.value.isBlank()) {
-                _errorMessage.value = "Por favor complete todos los campos"
-            } else if (!_email.value.contains("@")) {
-                _errorMessage.value = "Correo inválido"
-            } else {
+
+            try {
+                val response = RetrofitClient.authService.login(
+                    LoginRequest(email = _email.value, password = _password.value)
+                )
+
+                // Guarda el token en DataStore
+                userPreferences.saveToken(response.token)
+
                 onSuccess()
+            } catch (e: Exception) {
+                _errorMessage.value = "Login fallido: ${e.localizedMessage ?: "Error desconocido"}"
             }
+
             _isLoading.value = false
         }
     }
 }
-

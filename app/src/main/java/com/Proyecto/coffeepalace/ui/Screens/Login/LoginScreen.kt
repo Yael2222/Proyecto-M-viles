@@ -29,19 +29,23 @@ import androidx.compose.runtime.collectAsState
 import com.Proyecto.coffeepalace.ui.utils.hideKeyboardOnTap
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import com.Proyecto.coffeepalace.Data.LoginViewModelFactory
 
 @Composable
 fun LoginScreen(
-    viewModel: LoginViewModel = viewModel(),
     onNavigateToForgotPassword: () -> Unit = {},
     onNavigateToSignUp: () -> Unit = {},
     onLoginSuccess: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+    val viewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(context))
     val email by viewModel.email.collectAsState()
     val password by viewModel.password.collectAsState()
     val isPasswordVisible by viewModel.isPasswordVisible.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()
+
 
     Scaffold { paddingValues ->
         Column(

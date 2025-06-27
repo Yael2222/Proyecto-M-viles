@@ -35,7 +35,7 @@ import com.Proyecto.coffeepalace.ui.utils.hideKeyboardOnTap
 fun ForgotPasswordScreen(
     viewModel: ForgotPasswordViewModel = viewModel(),
     navController: NavHostController,
-    //onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit
 ) {
     val email by viewModel.email.collectAsState()
     val errorMessage by viewModel.errorMessage.collectAsState()

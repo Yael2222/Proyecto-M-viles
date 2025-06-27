@@ -1,4 +1,4 @@
-/*package com.Proyecto.coffeepalace.Data.Database.Entities
+package com.Proyecto.coffeepalace.Data.Database.Entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -11,4 +11,3 @@ data class RecipeEntity(
     val imageUrl: String,
     val rating: Double
 )
-*/
