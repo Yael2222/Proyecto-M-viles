@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
+
 }
 
 android {
@@ -55,13 +56,11 @@ android {
 }
 
 dependencies {
-    // Core Android
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
     implementation("androidx.appcompat:appcompat:1.7.1")
 
-    // Compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
@@ -79,6 +78,12 @@ dependencies {
     // Supabase
     implementation(libs.supabase.kt)
     implementation(libs.supabase.postgrest)
+    implementation(libs.supabase.gotrue)
+
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)
@@ -89,7 +94,8 @@ dependencies {
     ksp(libs.room.compiler)
 
     // DataStore
-    implementation(libs.datastore.preferences)
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
 
     // Testing
     testImplementation(libs.junit)

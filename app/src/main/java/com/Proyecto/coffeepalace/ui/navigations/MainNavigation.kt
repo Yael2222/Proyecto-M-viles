@@ -62,7 +62,10 @@ fun MainNavigation(
         }
 
         composable(Screen.ForgotPassword.route) {
-            ForgotPasswordScreen(navController = navController)
+            ForgotPasswordScreen(
+                navController = navController,
+                onNavigateBack = { navController.popBackStack() }
+            )
         }
 
         composable(Screen.ProductDetail.route) {

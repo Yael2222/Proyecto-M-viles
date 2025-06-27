@@ -1,4 +1,4 @@
-/*package com.Proyecto.coffeepalace.Data.Database
+package com.Proyecto.coffeepalace.Data.Database
 
 import android.content.Context
 import androidx.room.Database
@@ -10,7 +10,7 @@ import com.Proyecto.coffeepalace.Data.Database.Dao.UserDao
 import com.Proyecto.coffeepalace.Data.Database.Entities.*
 
 @Database(
-    entities = [UserEntity::class/*, RecipeEntity::class, CommentEntity::class*/], version = 1,
+    entities = [UserEntity::class, RecipeEntity::class, CommentEntity::class], version = 1,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -35,4 +35,4 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
-*/
+
