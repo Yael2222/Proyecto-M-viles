@@ -2,20 +2,19 @@ package com.Proyecto.coffeepalace.Data.Database.Dao
 
 import kotlinx.coroutines.flow.Flow
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.Proyecto.coffeepalace.Data.Database.Entities.CommentEntity
+import com.Proyecto.coffeepalace.Data.Model.Comment
 
 @Dao
 interface CommentDao {
-    @Query("SELECT * FROM comments WHERE recipeId = :recipeId")
-    suspend fun getCommentsForRecipe(recipeId: Int): Flow<List<CommentEntity>>
+    @Query("SELECT * FROM comments")
+    fun getAllComments(): Flow<List<Comment>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertComment(comment: CommentEntity)
+    suspend fun insertComment(comment: Comment)
 
-    @Delete
-    suspend fun delete(comment: CommentEntity)
+    @Query("DELETE FROM comments")
+    suspend fun deleteAll()
 }

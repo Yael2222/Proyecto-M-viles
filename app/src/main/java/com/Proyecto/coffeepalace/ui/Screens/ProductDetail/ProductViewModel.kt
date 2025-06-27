@@ -1,29 +1,32 @@
 package com.Proyecto.coffeepalace.ui.Screens.ProductDetail
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.Proyecto.coffeepalace.Data.Model.Comment
+import com.Proyecto.coffeepalace.Data.Repository.CommentRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class ProductViewModel : ViewModel() {
-    var newCommentText = mutableStateOf("")
-    var newRating = mutableStateOf(0)
+class ProductViewModel(private val repository: CommentRepository) : ViewModel() {
+    var newCommentText = MutableStateFlow("")
+    var newRating = MutableStateFlow(0)
 
-    var comments = mutableStateListOf(
-        Comment("Affogato - Neque porro quisquam est qui dolorem ipsum quia", 4),
-        Comment("Affogato - Otro comentario de ejemplo", 5)
-    )
+    val comments: StateFlow<List<Comment>> = repository.getAllComments()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     fun addComment() {
-        if (newCommentText.value.isNotBlank() && newRating.value > 0) {
-            comments.add(
-                Comment(
-                    text = "Affogato - ${newCommentText.value}",
-                    rating = newRating.value
-                )
-            )
-            newCommentText.value = ""
-            newRating.value = 0
+        val text = newCommentText.value
+        val rating = newRating.value
+        if (text.isNotBlank() && rating > 0) {
+            viewModelScope.launch {
+                repository.insertComment(Comment(text = text, rating = rating))
+                newCommentText.value = ""
+                newRating.value = 0
+            }
         }
     }
 }
+

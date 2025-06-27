@@ -1,5 +1,6 @@
-/*package com.Proyecto.coffeepalace.Data.Database
+package com.Proyecto.coffeepalace.Data.Database
 
+/*
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -36,3 +37,13 @@ abstract class AppDatabase : RoomDatabase() {
     }
 }
 */
+
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import com.Proyecto.coffeepalace.Data.Database.Dao.CommentDao
+import com.Proyecto.coffeepalace.Data.Model.Comment
+
+@Database(entities = [Comment::class], version = 1)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun commentDao() : CommentDao
+}

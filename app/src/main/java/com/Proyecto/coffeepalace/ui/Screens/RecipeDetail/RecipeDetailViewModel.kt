@@ -1,6 +1,6 @@
-/*package com.Proyecto.coffeepalace.ui.Screens.RecipeDetail
+package com.Proyecto.coffeepalace.ui.Screens.RecipeDetail
 
-import androidx.lifecycle.ViewModel
+/*import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.Proyecto.coffeepalace.Data.Database.Dao.CommentDao
 import com.Proyecto.coffeepalace.Data.Database.Dao.RecipeDao
@@ -59,14 +59,12 @@ class RecipeDetailViewModel(
     }
 }*/
 
-/*package com.Proyecto.coffeepalace.ui.Screens.Search
-
-import androidx.compose.runtime.mutableStateListOf
+/*import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.Proyecto.coffeepalace.Data.Model.Recipe
 
-class SearchViewModel : ViewModel() {
+/*class SearchViewModel : ViewModel() {
 
     // Lista de recetas simuladas (puedes reemplazarla luego por datos reales)
     private val recipes = listOf(
@@ -79,7 +77,6 @@ class SearchViewModel : ViewModel() {
             rating = 4.5f,
             ratingCount = 123
         )
-        // Puedes agregar más recetas si lo deseas
     )
 
     // Comentarios por receta (clave: ID receta)

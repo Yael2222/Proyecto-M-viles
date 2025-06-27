@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -19,24 +18,42 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.rememberAsyncImagePainter
 import com.Proyecto.coffeepalace.ui.components.BottomBar
 import com.Proyecto.coffeepalace.ui.components.CommentCard
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.room.Room
+import com.Proyecto.coffeepalace.Data.Database.AppDatabase
+import com.Proyecto.coffeepalace.Data.Repository.CommentRepository
+import kotlin.jvm.java
+import androidx.compose.foundation.lazy.items
+import com.Proyecto.coffeepalace.ui.components.AddCommentBottomSheet
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductDetailScreen(
-    viewModel: ProductViewModel = viewModel(),
+    //viewModel: ProductViewModel = viewModel(),
     navController: NavController
 ) {
+    val context = LocalContext.current
+    val db = remember {
+        Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "coffee_palace_db"
+        ).build()
+    }
+    val repository = remember { CommentRepository(db.commentDao()) }
+    val viewModel = remember { ProductViewModel(repository) }
+    val comments by viewModel.comments.collectAsState()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -195,8 +212,11 @@ fun ProductDetailScreen(
                     )
 
                     LazyRow(modifier = Modifier.padding(bottom = 32.dp)) {
-                        items(viewModel.comments) { comment ->
-                            CommentCard(comment.text)
+                        items(comments) { comment ->
+                            CommentCard(
+                                text = comment.text,
+                                stars = comment.rating
+                            )
                         }
                     }
                 }

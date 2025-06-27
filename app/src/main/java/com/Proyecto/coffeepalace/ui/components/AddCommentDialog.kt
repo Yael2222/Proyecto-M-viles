@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.ProductDetail
+package com.Proyecto.coffeepalace.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
@@ -23,12 +23,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.Proyecto.coffeepalace.ui.Screens.ProductDetail.ProductViewModel
 
 @Composable
 fun AddCommentBottomSheet(
-viewModel: ProductViewModel,
-onDismiss: () -> Unit
+    viewModel: ProductViewModel,
+//viewModel: RecipeDetailViewModel,
+    onDismiss: () -> Unit
 ) {
+    val rating by viewModel.newRating.collectAsState()
+    val commentText by viewModel.newCommentText.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -41,12 +48,11 @@ onDismiss: () -> Unit
 
         Spacer(Modifier.height(16.dp))
 
-
         // Estrellas de calificación
         Row {
             (1..5).forEach { starIndex ->
                 Icon(
-                    imageVector = if (starIndex <= viewModel.newRating.value) Icons.Default.Star else Icons.Default.StarBorder,
+                    imageVector = if (starIndex <= rating) Icons.Default.Star else Icons.Default.StarBorder,
                     contentDescription = "Rating Star",
                     tint = Color(0xFFFFC107),
                     modifier = Modifier
@@ -59,7 +65,7 @@ onDismiss: () -> Unit
         Spacer(Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = viewModel.newCommentText.value,
+            value = commentText,
             onValueChange = { viewModel.newCommentText.value = it },
             placeholder = { Text("add your comments") },
             modifier = Modifier
@@ -92,3 +98,4 @@ onDismiss: () -> Unit
         }
     }
 }
+

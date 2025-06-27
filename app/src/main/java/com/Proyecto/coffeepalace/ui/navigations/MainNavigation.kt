@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import com.Proyecto.coffeepalace.ui.Screens.Login.LoginScreen
 import com.Proyecto.coffeepalace.ui.Screens.Forgot.ForgotPasswordScreen
 import com.Proyecto.coffeepalace.ui.Screens.ProductDetail.ProductDetailScreen
-import com.Proyecto.coffeepalace.ui.Screens.Search.RecipeDetailScreen
+//import com.Proyecto.coffeepalace.ui.Screens.Search.RecipeDetailScreen
 import com.Proyecto.coffeepalace.ui.Screens.Search.SearchScreen
 import com.Proyecto.coffeepalace.ui.Screens.Splash.SplashScreen
 import com.Proyecto.coffeepalace.ui.Screens.SignUp.SignUpScreen
@@ -50,11 +50,11 @@ fun MainNavigation(navController: NavHostController) {
             SearchScreen(navController = navController)
         }
 
-        composable("recipe_detail/{recipeId}") { backStackEntry ->
+        /*composable("recipe_detail/{recipeId}") { backStackEntry ->
             val recipeId = backStackEntry.arguments?.getString("recipeId")?.toIntOrNull()
             recipeId?.let {
                 RecipeDetailScreen(navController = navController, recipeId = it)
             }
-        }
+        }*/
     }
 }

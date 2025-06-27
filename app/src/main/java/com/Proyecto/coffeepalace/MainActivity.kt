@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.navigation.compose.rememberNavController
+import com.Proyecto.coffeepalace.ui.Screens.Login.LoginScreen
 import com.Proyecto.coffeepalace.ui.theme.CoffeePalaceTheme
 import com.Proyecto.coffeepalace.ui.navigations.MainNavigation
 import com.Proyecto.coffeepalace.ui.Screens.Seller.ViewStock.ViewStockViewModel
@@ -25,7 +26,7 @@ class MainActivity : ComponentActivity() {
                 // Navegación principal (puedes pasar el viewModel si lo usas dentro)
                 MainNavigation(
                     navController = navController,
-                    viewStockViewModel = viewStockViewModel
+                    //viewStockViewModel = viewStockViewModel
                 )
             }
         }
