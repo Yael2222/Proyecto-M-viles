@@ -1,3 +1,4 @@
+// com.Proyecto.coffeepalace.ui.Screens.Seller.Receta/DeleteRecetaScreen.kt
 package com.Proyecto.coffeepalace.ui.Screens.Seller.Receta
 
 import androidx.compose.foundation.Image
@@ -13,22 +14,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+// import androidx.lifecycle.viewmodel.compose.viewModel // <-- ¡Elimina esta importación!
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.Proyecto.coffeepalace.Data.Model.receta
 import com.Proyecto.coffeepalace.Data.Model.ingrediente
-import com.Proyecto.coffeepalace.Data.Model.RecetaWithIngredientes
+import com.Proyecto.coffeepalace.Data.Model.RecetaWithIngredientes // <--- Asegúrate de que esta importación esté
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeleteRecetaScreen(
-    viewModel: DeleteRecetaViewModel = viewModel(),
+    viewModel: DeleteRecetaViewModel, // <-- ¡Recibe el ViewModel como parámetro!
     navController: NavHostController
 ) {
     val recetasWithIngredientes by viewModel.recetasWithIngredientes.collectAsState()
@@ -80,7 +78,7 @@ fun DeleteRecetaScreen(
                     LazyColumn(
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-                        items(recetasWithIngredientes) { item ->
+                        items(recetasWithIngredientes, key = { it.receta.id ?: 0L }) { item -> // Añade key
                             RecetaItem(
                                 receta = item.receta,
                                 ingredientes = item.ingredientes,
@@ -96,11 +94,12 @@ fun DeleteRecetaScreen(
     }
 }
 
+// RecetaItem se mantiene igual, no necesita cambios ya que recibe los objetos de datos.
 @Composable
 fun RecetaItem(receta: receta, ingredientes: List<ingrediente>, onDeleteClick: (Long) -> Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth(), // ¡Eliminado .heightIn(min = 100.dp) para altura flexible!
+            .fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 3.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
@@ -112,21 +111,28 @@ fun RecetaItem(receta: receta, ingredientes: List<ingrediente>, onDeleteClick: (
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             // Contenido de la receta (imagen, nombre, descripción)
-            Row(verticalAlignment = Alignment.Top, modifier = Modifier.weight(1f)) { // Cambiado a Alignment.Top
-                Image(
-                    painter = rememberAsyncImagePainter(model = receta.imagen),
-                    contentDescription = "Imagen de ${receta.nombre}",
-                    modifier = Modifier
-                        .size(80.dp)
-                        .align(Alignment.CenterVertically),
-                    contentScale = ContentScale.Crop
-                )
+            Row(verticalAlignment = Alignment.Top, modifier = Modifier.weight(1f)) {
+                // Si la imagen puede ser nula o en blanco, muestra un placeholder o nada
+                if (!receta.imagen.isNullOrBlank()) {
+                    Image(
+                        painter = rememberAsyncImagePainter(model = receta.imagen),
+                        contentDescription = "Imagen de ${receta.nombre}",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .align(Alignment.CenterVertically),
+                        contentScale = ContentScale.Crop
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                } else {
+                    // Opcional: Mostrar un icono o placeholder si no hay imagen
+                    // Icon(Icons.Default.Image, contentDescription = "No image", modifier = Modifier.size(80.dp).align(Alignment.CenterVertically))
+                    // Spacer(modifier = Modifier.width(16.dp))
+                }
 
-                Spacer(modifier = Modifier.width(16.dp))
 
                 Column(
                     modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(4.dp) // Espacio entre elementos de la columna
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
                 ) {
                     Text(
                         text = receta.nombre,
@@ -140,19 +146,19 @@ fun RecetaItem(receta: receta, ingredientes: List<ingrediente>, onDeleteClick: (
                     )
 
                     if (ingredientes.isNotEmpty()) {
-                        Spacer(modifier = Modifier.height(8.dp)) // Espacio antes de los ingredientes
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Ingredientes:",
                             style = MaterialTheme.typography.bodySmall,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        Column( // Nueva columna para los ingredientes
-                            modifier = Modifier.padding(start = 8.dp) // Sangría para los ingredientes
+                        Column(
+                            modifier = Modifier.padding(start = 8.dp)
                         ) {
                             ingredientes.forEach { ingrediente ->
                                 Text(
-                                    text = "• ${ingrediente.nombre}", // Punto para cada ingrediente
+                                    text = "• ${ingrediente.nombre}",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -169,10 +175,9 @@ fun RecetaItem(receta: receta, ingredientes: List<ingrediente>, onDeleteClick: (
                 }
             }
 
-            // Botón de eliminar
             IconButton(
-                onClick = { onDeleteClick(receta.id) },
-                modifier = Modifier.align(Alignment.Top) // Alinea el botón en la parte superior de la tarjeta
+                onClick = { onDeleteClick(receta.id ?: 0L) }, // Asegúrate que el ID no sea nulo al pasar
+                modifier = Modifier.align(Alignment.Top)
             ) {
                 Icon(
                     imageVector = Icons.Default.Delete,

@@ -27,6 +27,8 @@ import com.Proyecto.coffeepalace.ui.Screens.Seller.Receta.DeleteRecetaScreen
 import com.Proyecto.coffeepalace.ui.Screens.Seller.Receta.DeleteRecetaViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Seller.ViewUsers.ViewUsersScreen
 import com.Proyecto.coffeepalace.ui.Screens.Seller.ViewUsers.ViewUsersViewModel
+import com.Proyecto.coffeepalace.ui.Screens.Seller.Ordenes.OrderScreen
+import com.Proyecto.coffeepalace.ui.Screens.Seller.Ordenes.OrderViewModel
 import com.Proyecto.coffeepalace.di.AppContainer
 /*
 import com.Proyecto.coffeepalace.ui.Screens.Login.LoginScreen
@@ -42,6 +44,15 @@ import com.Proyecto.coffeepalace.ui.Screens.SignUp.SignUpScreen
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
+    val orderViewModelFactory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(OrderViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return OrderViewModel(AppContainer.orderRepository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class for OrderViewModel")
+        }
+    }
 
     val categoryViewModelFactory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -88,8 +99,32 @@ fun NavGraph() {
             throw IllegalArgumentException("Unknown ViewModel class for DeleteProductViewModel")
         }
     }
+    val addRecetaViewModelFactory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(AddRecetaViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                // AddRecetaViewModel requiere dos repositorios
+                return AddRecetaViewModel(AppContainer.recetaRepository, AppContainer.productRepository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class for AddRecetaViewModel")
+        }
+    }
 
+    val deleteRecetaViewModelFactory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(DeleteRecetaViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return DeleteRecetaViewModel(AppContainer.recetaRepository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class for DeleteRecetaViewModel")
+        }
+    }
     NavHost(navController = navController, startDestination = Screens.HomeSeller.route) {
+
+        composable(route = Screens.Orders.route) { // Asume que tienes Screens.Orders.route
+            val orderViewModel: OrderViewModel = viewModel(factory = orderViewModelFactory)
+            OrderScreen(viewModel = orderViewModel, navController = navController)
+        }
 
         composable(route = Screens.HomeSeller.route) {
             val homeSellerViewModel: HomeSellerViewModel = viewModel()
@@ -113,7 +148,7 @@ fun NavGraph() {
 
 
         composable(route = Screens.AddReceta.route) {
-            val addRecetaViewModel: AddRecetaViewModel = viewModel()
+            val addRecetaViewModel: AddRecetaViewModel = viewModel(factory = addRecetaViewModelFactory)
             AddRecetaScreen(viewModel = addRecetaViewModel, navController = navController)
         }
 
@@ -128,7 +163,7 @@ fun NavGraph() {
         }
 
         composable(route = Screens.DeleteReceta.route) {
-            val deleteRecetaViewModel: DeleteRecetaViewModel = viewModel()
+            val deleteRecetaViewModel: DeleteRecetaViewModel = viewModel(factory = deleteRecetaViewModelFactory)
             DeleteRecetaScreen(viewModel = deleteRecetaViewModel, navController = navController)
         }
 

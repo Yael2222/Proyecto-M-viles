@@ -68,6 +68,9 @@ dependencies {
     implementation(libs.supabase.kt)
     implementation(libs.supabase.postgrest)
     implementation(libs.kotlinx.serialization.json)
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")// <-- ¡AÑADE ESTA! (o la última versión estable)
+    implementation("androidx.compose.material3:material3") // <--- ESTA ES LA CLAVE PARA MATERIAL3
+    implementation(platform("androidx.compose:compose-bom:2024.04.00")) // <-- VERIFICA ESTA VERSIÓN
     implementation("io.ktor:ktor-client-okhttp:2.3.2")
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")

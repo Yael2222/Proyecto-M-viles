@@ -11,7 +11,7 @@ interface DaoReceta {
     suspend fun getAllIngredientesReceta(): List<ingrediente>
     suspend fun addReceta(receta: receta, ingredientesIds: List<Long>): Boolean
     suspend fun getAllRecetas(): List<receta>
-    suspend fun deleteReceta(idReceta: Long): Boolean
+    suspend fun deleteReceta(idReceta: Long?): Boolean
     suspend fun getAllRecetaIngredienteRelations(): List<receta_ingrediente>
 
 }

@@ -6,6 +6,8 @@ import com.Proyecto.coffeepalace.Data.Repository.CategoryRepository
 import com.Proyecto.coffeepalace.Data.Repository.IngredienteRepository
 import com.Proyecto.coffeepalace.Data.Repository.ProductRepository
 import com.Proyecto.coffeepalace.Data.Repository.UserRepository
+import com.Proyecto.coffeepalace.Data.Repository.RecetaRepository
+import com.Proyecto.coffeepalace.Data.Repository.OrderRepository // <--- ¡NUEVA IMPORTACIÓN!
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -17,13 +19,14 @@ object AppContainer {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
+    val apiService: ApiService by lazy {
+        retrofit.create(ApiService::class.java)
+    }
     val userRepository: UserRepository by lazy {
         UserRepository(apiService)
     }
 
-    val apiService: ApiService by lazy {
-        retrofit.create(ApiService::class.java)
-    }
+
 
     val categoryRepository: CategoryRepository by lazy {
         CategoryRepository(apiService)
@@ -34,5 +37,11 @@ object AppContainer {
     }
     val productRepository: ProductRepository by lazy {
         ProductRepository(apiService)
+    }
+    val recetaRepository: RecetaRepository by lazy {
+        RecetaRepository(apiService)
+    }
+    val orderRepository: OrderRepository by lazy {
+        OrderRepository(apiService)
     }
 }

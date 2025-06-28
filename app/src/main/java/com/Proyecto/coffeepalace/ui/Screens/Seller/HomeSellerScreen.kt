@@ -82,7 +82,7 @@ fun HomeSellerScreen(
                         navController.navigate(Screens.ViewUsers.route)
                     }
                     OptionItem(icon = Icons.Default.ShoppingCart, text = "Ver ordenes") {
-                        navController.navigate(Screens.AddReceta.route)
+                        navController.navigate(Screens.Orders.route)
                     }
                     OptionItem(icon = Icons.Default.Category, text = "Añadir categoría") {
                         navController.navigate(Screens.Category.route)
