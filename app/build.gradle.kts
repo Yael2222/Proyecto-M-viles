@@ -68,9 +68,11 @@ dependencies {
     implementation(libs.supabase.kt)
     implementation(libs.supabase.postgrest)
     implementation(libs.kotlinx.serialization.json)
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")// <-- ¡AÑADE ESTA! (o la última versión estable)
-    implementation("androidx.compose.material3:material3") // <--- ESTA ES LA CLAVE PARA MATERIAL3
-    implementation(platform("androidx.compose:compose-bom:2024.04.00")) // <-- VERIFICA ESTA VERSIÓN
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3") // <--- ¡Asegúrate de esta versión o la más reciente!
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+    implementation("androidx.compose.material3:material3")
+    implementation(platform("androidx.compose:compose-bom:2024.04.00"))
     implementation("io.ktor:ktor-client-okhttp:2.3.2")
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")

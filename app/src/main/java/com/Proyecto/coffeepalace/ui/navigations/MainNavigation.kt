@@ -3,14 +3,13 @@ package com.Proyecto.coffeepalace.ui.navigations
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider // Importación necesaria para ViewModelProvider.Factory
-import androidx.lifecycle.viewmodel.compose.viewModel // Importación necesaria para la función viewModel()
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
-// Importa todas tus pantallas y ViewModels de forma única
+import com.Proyecto.coffeepalace.Data.LoginViewModelFactory
 import com.Proyecto.coffeepalace.ui.Screens.Seller.AddProduct.AddProductScreen
 import com.Proyecto.coffeepalace.ui.Screens.Seller.AddProduct.AddProductViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Seller.Category.CategoryScreen
@@ -29,21 +28,26 @@ import com.Proyecto.coffeepalace.ui.Screens.Seller.ViewUsers.ViewUsersScreen
 import com.Proyecto.coffeepalace.ui.Screens.Seller.ViewUsers.ViewUsersViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Seller.Ordenes.OrderScreen
 import com.Proyecto.coffeepalace.ui.Screens.Seller.Ordenes.OrderViewModel
-import com.Proyecto.coffeepalace.di.AppContainer
-/*
-import com.Proyecto.coffeepalace.ui.Screens.Login.LoginScreen
-import com.Proyecto.coffeepalace.ui.Screens.Forgot.ForgotPasswordScreen
-import com.Proyecto.coffeepalace.ui.Screens.ProductDetail.ProductDetailScreen
-import com.Proyecto.coffeepalace.ui.Screens.Search.RecipeDetailScreen
-import com.Proyecto.coffeepalace.ui.Screens.Search.SearchScreen
 import com.Proyecto.coffeepalace.ui.Screens.Splash.SplashScreen
+import com.Proyecto.coffeepalace.ui.Screens.Login.LoginScreen
 import com.Proyecto.coffeepalace.ui.Screens.SignUp.SignUpScreen
-*/
+import com.Proyecto.coffeepalace.ui.Screens.ForgotPassword.ForgotPasswordScreen
+import com.Proyecto.coffeepalace.ui.Screens.SignUp.SignUpViewModelFactory
+import com.Proyecto.coffeepalace.ui.Screens.ForgotPassword.ForgotPasswordViewModelFactory
+import com.Proyecto.coffeepalace.ui.Screens.Seller.HomeSellerViewModelFactory
+import com.Proyecto.coffeepalace.di.AppContainer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
+
+    val loginViewModelFactory = LoginViewModelFactory(navController.context) // Pasa el contexto
+    val signUpViewModelFactory = SignUpViewModelFactory()
+    val forgotPasswordViewModelFactory = ForgotPasswordViewModelFactory()
+    val homeSellerViewModelFactory = HomeSellerViewModelFactory() // <--- Instancia la factoría
+
+
     val orderViewModelFactory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(OrderViewModel::class.java)) {
@@ -104,7 +108,10 @@ fun NavGraph() {
             if (modelClass.isAssignableFrom(AddRecetaViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
                 // AddRecetaViewModel requiere dos repositorios
-                return AddRecetaViewModel(AppContainer.recetaRepository, AppContainer.productRepository) as T
+                return AddRecetaViewModel(
+                    AppContainer.recetaRepository,
+                    AppContainer.productRepository
+                ) as T
             }
             throw IllegalArgumentException("Unknown ViewModel class for AddRecetaViewModel")
         }
@@ -119,17 +126,44 @@ fun NavGraph() {
             throw IllegalArgumentException("Unknown ViewModel class for DeleteRecetaViewModel")
         }
     }
-    NavHost(navController = navController, startDestination = Screens.HomeSeller.route) {
+    NavHost(navController = navController, startDestination = Screens.Splash.route) {
 
-        composable(route = Screens.Orders.route) { // Asume que tienes Screens.Orders.route
+        composable(route = Screens.Splash.route) {
+            SplashScreen(navController = navController)
+        }
+        composable(route = Screens.HomeSeller.route) {
+            val homeSellerViewModel: HomeSellerViewModel = viewModel(factory = homeSellerViewModelFactory) // <--- ¡CAMBIO AQUÍ! Usa la factoría
+            HomeSellerScreen(viewModel = homeSellerViewModel, navController = navController)
+        }
+        composable(route = Screens.Login.route) { // <--- RUTA DE LOGIN
+            LoginScreen(
+                onNavigateToForgotPassword = { navController.navigate(Screens.ForgotPassword.route) },
+                onNavigateToSignUp = { navController.navigate(Screens.SignUp.route) },
+                onLoginSuccess = { navController.navigate(Screens.HomeSeller.route) {
+                    popUpTo(Screens.Login.route) { inclusive = true } // Eliminar Login del back stack
+                }}
+            )
+        }
+        composable(route = Screens.SignUp.route) { // <--- RUTA DE SIGNUP
+            SignUpScreen(
+                onNavigateToLogin = { navController.navigate(Screens.Login.route) {
+                    popUpTo(Screens.SignUp.route) { inclusive = true } // Eliminar SignUp del back stack
+                } },
+                onBackToLogin = { navController.popBackStack() }
+            )
+        }
+        composable(route = Screens.ForgotPassword.route) {
+            ForgotPasswordScreen(
+                navController = navController,
+                onNavigateBack = { navController.popBackStack() }
+            )
+        }
+        composable(route = Screens.Orders.route) {
             val orderViewModel: OrderViewModel = viewModel(factory = orderViewModelFactory)
             OrderScreen(viewModel = orderViewModel, navController = navController)
         }
 
-        composable(route = Screens.HomeSeller.route) {
-            val homeSellerViewModel: HomeSellerViewModel = viewModel()
-            HomeSellerScreen(viewModel = homeSellerViewModel, navController = navController)
-        }
+
 
         composable(route = Screens.Category.route) {
             val categoryViewModel: CategoryViewModel = viewModel(factory = categoryViewModelFactory)
@@ -137,23 +171,27 @@ fun NavGraph() {
         }
 
         composable(route = Screens.AddProduct.route) {
-            val addProductViewModel: AddProductViewModel = viewModel(factory = addProductViewModelFactory)
+            val addProductViewModel: AddProductViewModel =
+                viewModel(factory = addProductViewModelFactory)
             AddProductScreen(viewModel = addProductViewModel, navController = navController)
         }
 
         composable(route = Screens.Ingrediente.route) {
-            val ingredienteViewModel: addIngredienteViewModel = viewModel(factory = ingredienteViewModelFactory)
+            val ingredienteViewModel: addIngredienteViewModel =
+                viewModel(factory = ingredienteViewModelFactory)
             addIngredienteScreen(viewModel = ingredienteViewModel, navController = navController)
         }
 
 
         composable(route = Screens.AddReceta.route) {
-            val addRecetaViewModel: AddRecetaViewModel = viewModel(factory = addRecetaViewModelFactory)
+            val addRecetaViewModel: AddRecetaViewModel =
+                viewModel(factory = addRecetaViewModelFactory)
             AddRecetaScreen(viewModel = addRecetaViewModel, navController = navController)
         }
 
         composable(route = Screens.DeleteProduct.route) {
-            val deleteProductViewModel: DeleteProductViewModel = viewModel(factory = deleteProductViewModelFactory)
+            val deleteProductViewModel: DeleteProductViewModel =
+                viewModel(factory = deleteProductViewModelFactory)
             DeleteProductScreen(viewModel = deleteProductViewModel, navController = navController)
         }
 
@@ -163,77 +201,10 @@ fun NavGraph() {
         }
 
         composable(route = Screens.DeleteReceta.route) {
-            val deleteRecetaViewModel: DeleteRecetaViewModel = viewModel(factory = deleteRecetaViewModelFactory)
+            val deleteRecetaViewModel: DeleteRecetaViewModel =
+                viewModel(factory = deleteRecetaViewModelFactory)
             DeleteRecetaScreen(viewModel = deleteRecetaViewModel, navController = navController)
         }
 
-        /*
-
-  composable(Screen.Login.route) {
-
-  LoginScreen(
-  onNavigateToSignUp = { navController.navigate(Screen.SignUp.route) },
-  onNavigateToForgotPassword = { navController.navigate(Screen.ForgotPassword.route) },
-  onLoginSuccess = { navController.navigate(Screen.ProductDetail.route) }
-
-  )
-
-  }
-
-
-
-  composable(Screen.SignUp.route) {
-
-  SignUpScreen(
-
-  onBackToLogin = { navController.popBackStack(Screen.Login.route, false) }
-
-  )
-
-  }
-
-
-
-  composable(Screen.ForgotPassword.route) {
-
-  ForgotPasswordScreen(
-
-  onNavigateBack = { navController.popBackStack() }
-
-  )
-
-  }
-
-
-
-  composable(Screen.ProductDetail.route) {
-
-  ProductDetailScreen(navController = navController)
-
-  }
-
-
-
-  composable(Screen.Search.route) {
-
-  SearchScreen(navController = navController)
-
-  }
-
-
-
-  composable("recipe_detail/{recipeId}") { backStackEntry ->
-
-  val recipeId = backStackEntry.arguments?.getString("recipeId")?.toIntOrNull()
-
-  recipeId?.let {
-
-  RecipeDetailScreen(navController = navController, recipeId = it)
-
-  }
-
-  }
-
-  */
     }
 }

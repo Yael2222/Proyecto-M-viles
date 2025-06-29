@@ -8,6 +8,7 @@ import com.Proyecto.coffeepalace.Data.Model.receta
 import com.Proyecto.coffeepalace.Data.Model.receta_ingrediente
 import com.Proyecto.coffeepalace.Data.Model.OrdenWithDetails
 import com.Proyecto.coffeepalace.Data.Model.orden_vendedor
+import com.Proyecto.coffeepalace.Data.Model.AuthResponse
 import retrofit2.http.PATCH
 import okhttp3.MultipartBody
 import retrofit2.http.Body
@@ -22,7 +23,32 @@ import retrofit2.http.Part
 data class UpdateOrderStatusRequest(val estado: String)
 
 
+data class AuthRequest(val email: String, val password: String)
+// --- ¡NUEVO! Request para el registro que incluye el nombre ---
+data class SignUpRequest(
+    val email: String,
+    val password: String,
+    val name: String // Nuevo campo para el nombre
+)
+data class ResetPasswordRequest(val email: String)
+data class GoogleSignInTokenRequest(
+    val idToken: String
+)
+
 interface ApiService {
+    @POST("auth/signup") // Coincide con POST /api/auth/signup
+    suspend fun signUp(@Body request: SignUpRequest): AuthResponse // <--- ¡CAMBIO AQUÍ!
+
+    @POST("auth/signin") // Coincide con POST /api/auth/signin
+    suspend fun signIn(@Body request: AuthRequest): AuthResponse
+
+    @POST("auth/reset-password") // Coincide con POST /api/auth/reset-password
+    suspend fun resetPassword(@Body request: ResetPasswordRequest): AuthResponse
+    @POST("auth/signin-google-token") // Debe coincidir con la ruta en tu backend Node.js
+    suspend fun signInWithGoogleToken(@Body request: GoogleSignInTokenRequest): AuthResponse
+    @POST("auth/signout") // Coincide con POST /api/auth/signout en tu backend
+    suspend fun signOutBackend(): AuthResponse
+
     @Multipart
     @POST("upload/product")
     suspend fun uploadProductImage(@Part image: MultipartBody.Part): ImageUploadResponse

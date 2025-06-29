@@ -9,8 +9,8 @@ sealed class Screens(val route: String) {
     object DeleteProduct : Screens("delete_product")
     object ViewUsers : Screens("view_users")
     object DeleteReceta : Screens("delete_receta")
-    object Orders : Screens("orders_screen") // <--- ¡NUEVA LÍNEA!
-    object Splash : Screens("splash")
+    object Orders : Screens("orders_screen")
+    object Splash : Screens("splash_screen")
     object Login : Screens("login")
     object SignUp : Screens("signup")
     object ForgotPassword : Screens("forgot_password")

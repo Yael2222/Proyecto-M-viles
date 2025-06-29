@@ -23,15 +23,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.Proyecto.coffeepalace.ui.navigations.Screens
+import androidx.lifecycle.viewmodel.compose.viewModel // <--- Para usar la factoría
+import com.Proyecto.coffeepalace.ui.Screens.Seller.HomeSellerViewModelFactory
+import kotlinx.coroutines.launch // <--- Para usar scope.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeSellerScreen(
-    viewModel: HomeSellerViewModel,
+    viewModel: HomeSellerViewModel = viewModel(factory = HomeSellerViewModelFactory()), // <--- Usar la factoría
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope() // Necesario para llamar a funciones suspend
 
     Scaffold { paddingValues ->
         Column(
@@ -68,9 +72,6 @@ fun HomeSellerScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-
-
-
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -103,14 +104,21 @@ fun HomeSellerScreen(
                         navController.navigate(Screens.DeleteReceta.route)
                     }
                     OptionItem(icon = Icons.Default.Logout, text = "Cerrar Sesion") {
-                        navController.navigate(Screens.Category.route)
+                        scope.launch {
+                            viewModel.signOut {
+                                navController.navigate(Screens.Login.route) {
+                                    popUpTo(navController.graph.id) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
-
-            }
             }
         }
     }
+}
 
 
 @Composable
