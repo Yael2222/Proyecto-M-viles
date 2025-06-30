@@ -1,6 +1,6 @@
 package com.Proyecto.coffeepalace.ui.Screens.Seller.HomeSeller
 
-import androidx.compose.foundation.background
+/*import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -172,3 +172,4 @@ fun OptionItem(icon: ImageVector, text: String, onClick: () -> Unit) {
         }
     )
 }
+*/

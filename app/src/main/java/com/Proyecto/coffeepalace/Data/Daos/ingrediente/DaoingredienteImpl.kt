@@ -7,6 +7,8 @@ import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.postgrest
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+import io.github.jan.supabase.postgrest.query.filter.*
+
 
 class DaoIngredienteImpl : DaoIngrediente {
 

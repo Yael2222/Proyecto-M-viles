@@ -1,21 +1,125 @@
 package com.Proyecto.coffeepalace.ui.navigations
 
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.Proyecto.coffeepalace.ui.Screens.Login.LoginScreen
-import com.Proyecto.coffeepalace.ui.Screens.Forgot.ForgotPasswordScreen
-import com.Proyecto.coffeepalace.ui.Screens.ProductDetail.ProductDetailScreen
-//import com.Proyecto.coffeepalace.ui.Screens.Search.RecipeDetailScreen
-import com.Proyecto.coffeepalace.ui.Screens.Search.SearchScreen
-import com.Proyecto.coffeepalace.ui.Screens.Splash.SplashScreen
-import com.Proyecto.coffeepalace.ui.Screens.SignUp.SignUpScreen
+import androidx.navigation.navArgument
+import com.Proyecto.coffeepalace.ui.Screens.Customer.Cart.CartScreen
+import com.Proyecto.coffeepalace.ui.Screens.Customer.Category.CategoryScreen
+import com.Proyecto.coffeepalace.ui.Screens.Customer.Login.LoginScreen
+import com.Proyecto.coffeepalace.ui.Screens.Customer.Forgot.ForgotPasswordScreen
+import com.Proyecto.coffeepalace.ui.Screens.Customer.Home.HomeScreen
+import com.Proyecto.coffeepalace.ui.Screens.Customer.ProductDetail.ProductDetailScreen
+import com.Proyecto.coffeepalace.ui.Screens.Customer.Profile.ProfileScreen
+import com.Proyecto.coffeepalace.ui.Screens.Search.RecipeDetailScreen
+import com.Proyecto.coffeepalace.ui.Screens.Customer.Search.SearchScreen
+import com.Proyecto.coffeepalace.ui.Screens.Customer.SignUp.SignUpScreen
 
+@Composable
+fun MainNavigation(
+    navController: NavHostController,
+    startDestination: String = NavigationRoutes.LOGIN
+) {
+    NavHost(
+        navController = navController,
+        startDestination = startDestination
+    ) {
+        // Pantalla de Login
+        composable(NavigationRoutes.LOGIN) {
+            LoginScreen(
+                onNavigateToForgotPassword = {
+                    navController.navigate(NavigationRoutes.FORGOT_PASSWORD)
+                },
+                onNavigateToSignUp = {
+                    navController.navigate(NavigationRoutes.SIGN_UP)
+                },
+                onLoginSuccess = {
+                    navController.navigate(NavigationRoutes.SEARCH) {
+                        popUpTo(NavigationRoutes.LOGIN) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        // Pantalla de Forgot Password
+        composable(NavigationRoutes.FORGOT_PASSWORD) {
+            ForgotPasswordScreen(
+                navController = navController
+            )
+        }
+
+        // Pantalla de Sign Up (placeholder)
+        composable(NavigationRoutes.SIGN_UP) {
+            SignUpScreen()
+        }
+
+        // Pantalla de Home
+        composable(NavigationRoutes.HOME) {
+            HomeScreen(navController = navController)
+        }
+
+        // Pantalla de Búsqueda
+        composable(NavigationRoutes.SEARCH) {
+            SearchScreen(navController = navController)
+        }
+
+        // Pantalla de Categorías
+        composable(NavigationRoutes.CATEGORY) {
+            CategoryScreen(navController = navController)
+        }
+
+        // Pantalla de Perfil
+        composable(NavigationRoutes.PROFILE) {
+            ProfileScreen(navController = navController)
+        }
+
+        // Pantalla de Carrito
+        composable(NavigationRoutes.CART) {
+            CartScreen(navController = navController)
+        }
+
+        // Pantalla de Detalle de Producto
+        composable(
+            route = NavigationRoutes.PRODUCT_DETAIL,
+            arguments = listOf(
+                navArgument("productId") { type = NavType.IntType },
+                navArgument("userId") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getInt("productId") ?: 0
+            val userId = backStackEntry.arguments?.getInt("userId") ?: 1
+
+            ProductDetailScreen(
+                navController = navController,
+                idProducto = productId,
+                idUsuario = userId
+            )
+        }
+
+        // Pantalla de Detalle de Receta
+        composable(
+            route = NavigationRoutes.RECIPE_DETAIL,
+            arguments = listOf(navArgument("recipeId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val recipeId = backStackEntry.arguments?.getInt("recipeId") ?: 0
+            RecipeDetailScreen(
+                navController = navController,
+                recipeId = recipeId
+            )
+        }
+    }
+}
+
+
+
+/*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainNavigation(navController: NavHostController) {
+
+    val productDetailRoute = "product_detail/{idProducto}/{idUsuario}"
 
     NavHost(navController = navController, startDestination = Screen.Login.route) {
         composable(Screen.Splash.route) {
@@ -32,18 +136,30 @@ fun MainNavigation(navController: NavHostController) {
 
         composable(Screen.SignUp.route) {
             SignUpScreen(
-                onBackToLogin = { navController.popBackStack(Screen.Login.route, false) }
+                onNavigateToLogin = { navController.navigate(Screen.Login.route) }
             )
         }
 
         composable(Screen.ForgotPassword.route) {
-            ForgotPasswordScreen(navController = navController
-                /*onNavigateBack = { navController.popBackStack() }*/
-            )
+            ForgotPasswordScreen(navController = navController)
         }
 
-        composable(Screen.ProductDetail.route) {
-            ProductDetailScreen(navController = navController)
+        composable(
+            route = productDetailRoute,
+            arguments = listOf(
+                navArgument("idProducto") { type = NavType.IntType },
+                navArgument("idUsuario") { type = NavType.IntType }
+            )
+        ) { backStackEntry ->
+
+            val idProducto = backStackEntry.arguments?.getInt("idProducto") ?: 0
+            val idUsuario = backStackEntry.arguments?.getInt("idUsuario") ?: 0
+
+            ProductDetailScreen(
+                navController = navController,
+                idProducto = idProducto,
+                idUsuario = idUsuario
+            )
         }
 
         composable(Screen.Search.route) {
@@ -58,3 +174,5 @@ fun MainNavigation(navController: NavHostController) {
         }*/
     }
 }
+*/
+

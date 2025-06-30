@@ -27,12 +27,12 @@ fun BottomBar(
     onCartClick: () -> Unit
 ) {
     Box {
-        NavigationBar(containerColor = Color.White) {
+        NavigationBar(containerColor = Color.White, contentColor = Color(0xFF8A4F2E)) {
             NavigationBarItem(
-                selected = currentRoute == "home",
-                onClick = onHomeClick,
                 icon = { Icon(Icons.Default.Home, contentDescription = "Home") },
                 label = { Text("Home", fontSize = 10.sp) },
+                selected = currentRoute == "home",
+                onClick = onHomeClick,
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFF6D4C41),
                     selectedTextColor = Color(0xFF6D4C41),
@@ -42,10 +42,10 @@ fun BottomBar(
             )
 
             NavigationBarItem(
-                selected = currentRoute == "category",
-                onClick = onCategoryClick,
                 icon = { Icon(Icons.Default.Category, contentDescription = "Category") },
                 label = { Text("Category", fontSize = 10.sp) },
+                selected = currentRoute == "category",
+                onClick = onCategoryClick,
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFF6D4C41),
                     selectedTextColor = Color(0xFF6D4C41),
@@ -57,10 +57,10 @@ fun BottomBar(
             Spacer(modifier = Modifier.width(64.dp))
 
             NavigationBarItem(
-                selected = currentRoute == "search",
-                onClick = onSearchClick,
                 icon = { Icon(Icons.Default.Search, contentDescription = "Search") },
                 label = { Text("Search", fontSize = 10.sp) },
+                selected = currentRoute == "search",
+                onClick = onSearchClick,
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFF6D4C41),
                     selectedTextColor = Color(0xFF6D4C41),
@@ -70,10 +70,10 @@ fun BottomBar(
             )
 
             NavigationBarItem(
-                selected = currentRoute == "profile",
-                onClick = onProfileClick,
                 icon = { Icon(Icons.Default.Person, contentDescription = "Profile") },
                 label = { Text("Profile", fontSize = 10.sp) },
+                selected = currentRoute == "profile",
+                onClick = onProfileClick,
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color(0xFF6D4C41),
                     selectedTextColor = Color(0xFF6D4C41),
@@ -91,9 +91,9 @@ fun BottomBar(
             contentAlignment = Alignment.BottomCenter
         ) {
             FloatingActionButton(
-                onClick = onCartClick,
                 containerColor = Color(0xFF8A4F2E),
                 shape = CircleShape,
+                onClick = onCartClick,
                 modifier = Modifier
                     .size(64.dp)
                     .shadow(10.dp, CircleShape)

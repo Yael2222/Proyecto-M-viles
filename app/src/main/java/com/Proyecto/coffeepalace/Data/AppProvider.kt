@@ -1,5 +1,27 @@
 package com.Proyecto.coffeepalace.Data
 
+import android.content.Context
+import androidx.room.Room
+
+object AppProvider {
+    @Volatile
+    private var INSTANCE: AppDatabase? = null
+
+    fun getDatabase(context: Context): AppDatabase {
+        return INSTANCE ?: synchronized(this) {
+            val instance = Room.databaseBuilder(
+                context.applicationContext,
+                AppDatabase::class.java,
+                "coffee_palace_database"
+            ).build()
+            INSTANCE = instance
+            instance
+        }
+    }
+}
+
+
+
 /*import android.content.Context
 import com.Proyecto.coffeepalace.Data.Database.AppDatabase
 import com.Proyecto.coffeepalace.ui.Screens.Login.LoginViewModel
