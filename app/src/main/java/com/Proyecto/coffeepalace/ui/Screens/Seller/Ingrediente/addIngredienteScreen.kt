@@ -1,4 +1,4 @@
-package com.Proyecto.coffeepalace.ui.Screens.Seller.Category
+package com.Proyecto.coffeepalace.ui.Screens.Seller.Ingrediente
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,34 +14,26 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.Proyecto.coffeepalace.ui.theme.BrownCoffee
 import kotlinx.coroutines.launch
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.Proyecto.coffeepalace.Data.Network.ApiService // Ya no necesitas estas 3 importaciones si el ViewModel se pasa desde fuera
-import com.Proyecto.coffeepalace.Data.Repository.CategoryRepository
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import com.Proyecto.coffeepalace.Data.Network.NetworkConfig
-import androidx.lifecycle.viewmodel.compose.viewModel // Ya no necesitas esta importación
-import com.Proyecto.coffeepalace.ui.Screens.Seller.Product.DeleteProductViewModel // Esta parece ser una importación irrelevante aquí
+
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryScreen(
-    viewModel: CategoryViewModel, // <--- Este es el ViewModel que usaremos
+fun addIngredienteScreen(
+    viewModel: addIngredienteViewModel,
     navController: NavHostController
 ) {
 
-
-    val categories by viewModel.categories.collectAsState() // Usa el 'viewModel' del parámetro
+    val ingredientes by viewModel.ingredientes.collectAsState() // Usa el 'viewModel' del parámetro
     var showDialog by remember { mutableStateOf(false) }
-    var newCategory by remember { mutableStateOf("") }
+    var newIngrediente by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Categorias") },
+                title = { Text("Ingredientes") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -50,29 +42,32 @@ fun CategoryScreen(
             )
         }
     ) { innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(16.dp)
+        ) {
 
             LazyColumn {
-                items(categories) { category ->
+                items(ingredientes) { ingrediente ->
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = category.nombre)
+                        Text(text = ingrediente.nombre)
                         IconButton(onClick = {
-                            category.id?.let {
-                                coroutineScope.launch {
-                                    viewModel.deleteCategory(it) // Usa el 'viewModel' del parámetro
+                            coroutineScope.launch {
+                                ingrediente.id?.let { // Usar ?.let para ID nullable
+                                    val deleted = viewModel.deleteIngrediente(it) // Usa el 'viewModel' del parámetro
+                                    // Nada extra aquí, el ViewModel ya recarga la lista
                                 }
                             }
                         }) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete Category"
+                                contentDescription = "Delete Ingrediente"
                             )
                         }
                     }
@@ -89,10 +84,13 @@ fun CategoryScreen(
                     contentColor = Color.White
                 )
             ) {
-                Text("+ Add Category")
+                Text("+ Añadir Ingrediente")
             }
+
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
-                text = "* Si no se puede borrar, es porque está asignado a un producto. borrar primero el producto",
+                text = "* Si no se puede borrar, es porque está asignado a una receta. Borrar primero la receta",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Red
             )
@@ -100,33 +98,33 @@ fun CategoryScreen(
             if (showDialog) {
                 AlertDialog(
                     onDismissRequest = { showDialog = false },
-                    title = { Text("New Category") },
+                    title = { Text("Nuevo Ingrediente") },
                     text = {
                         OutlinedTextField(
-                            value = newCategory,
-                            onValueChange = { newCategory = it },
-                            label = { Text("Category Name") },
+                            value = newIngrediente,
+                            onValueChange = { newIngrediente = it },
+                            label = { Text("Nombre del ingrediente") },
                             modifier = Modifier.fillMaxWidth()
                         )
                     },
                     confirmButton = {
                         TextButton(onClick = {
-                            if (newCategory.isNotBlank()) {
+                            if (newIngrediente.isNotBlank()) {
                                 coroutineScope.launch {
-                                    viewModel.addCategory(newCategory.trim()) // Usa el 'viewModel' del parámetro
-                                    newCategory = ""
+                                    viewModel.addIngrediente(newIngrediente.trim()) // Usa el 'viewModel' del parámetro
+                                    newIngrediente = ""
                                     showDialog = false
                                 }
                             }
                         }) {
-                            Text("Add")
+                            Text("Agregar")
                         }
                     },
                     dismissButton = {
                         TextButton(onClick = {
                             showDialog = false
                         }) {
-                            Text("Cancel")
+                            Text("Cancelar")
                         }
                     }
                 )

@@ -22,18 +22,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.Proyecto.coffeepalace.Data.Dummy.Order
 import com.Proyecto.coffeepalace.ui.navigations.Screens
+import androidx.lifecycle.viewmodel.compose.viewModel // <--- Para usar la factoría
+import com.Proyecto.coffeepalace.ui.Screens.Seller.HomeSellerViewModelFactory
+import kotlinx.coroutines.launch // <--- Para usar scope.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeSellerScreen(
-    viewModel: HomeSellerViewModel,
+    viewModel: HomeSellerViewModel = viewModel(factory = HomeSellerViewModelFactory()), // <--- Usar la factoría
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    val uiState by viewModel.uiState.collectAsState()
     val scrollState = rememberScrollState()
+    val scope = rememberCoroutineScope() // Necesario para llamar a funciones suspend
 
     Scaffold { paddingValues ->
         Column(
@@ -51,7 +53,7 @@ fun HomeSellerScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Welcome,\nCafé Aroma!",
+                    text = "Welcome,\nVendendor!",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     lineHeight = 30.sp
@@ -70,26 +72,6 @@ fun HomeSellerScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Info Cards
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                InfoCard(
-                    title = "Today's Sales",
-                    value = "$${String.format("%.2f", uiState.salesToday)}",
-                    modifier = Modifier.weight(1f)
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                InfoCard(
-                    title = "Today's Orders",
-                    value = "${uiState.ordersToday}",
-                    modifier = Modifier.weight(1f)
-                )
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
@@ -97,30 +79,46 @@ fun HomeSellerScreen(
                 colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
                 Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                    OptionItem(icon = Icons.Default.Add, text = "Add product") {
-                        navController.navigate(Screens.AddProduct.route)
-                    }
-                    OptionItem(icon = Icons.AutoMirrored.Filled.List, text = "View stock") {
-                        navController.navigate(Screens.ViewStock.route)
-                    }
-                    OptionItem(icon = Icons.Default.Group, text = "View users") {
+                    OptionItem(icon = Icons.Default.People, text = "Ver usuarios") {
                         navController.navigate(Screens.ViewUsers.route)
                     }
-                    OptionItem(icon = Icons.Default.BarChart, text = "Estadistics") {
-                        navController.navigate(Screens.Estadistics.route)
+                    OptionItem(icon = Icons.Default.ShoppingCart, text = "Ver ordenes") {
+                        navController.navigate(Screens.Orders.route)
                     }
-                    OptionItem(icon = Icons.AutoMirrored.Filled.Message, text = "Comments") {
-                        navController.navigate(Screens.Comments.route)
-                    }
-                    OptionItem(icon = Icons.Default.Category, text = "Category") {
+                    OptionItem(icon = Icons.Default.Category, text = "Añadir categoría") {
                         navController.navigate(Screens.Category.route)
                     }
+                    OptionItem(icon = Icons.Default.LocalCafe, text = "Añadir producto") {
+                        navController.navigate(Screens.AddProduct.route)
+                    }
+                    OptionItem(icon = Icons.Default.RestaurantMenu, text = "Añadir ingrediente") {
+                        navController.navigate(Screens.Ingrediente.route)
+                    }
+                    OptionItem(icon = Icons.Default.MenuBook, text = "Añadir Receta") {
+                        navController.navigate(Screens.AddReceta.route)
+                    }
+                    OptionItem(icon = Icons.Default.Delete, text = "Eliminar Productos") {
+                        navController.navigate(Screens.DeleteProduct.route)
+                    }
+                    OptionItem(icon = Icons.Default.DeleteForever, text = "Eliminar Recetas") {
+                        navController.navigate(Screens.DeleteReceta.route)
+                    }
+                    OptionItem(icon = Icons.Default.Logout, text = "Cerrar Sesion") {
+                        scope.launch {
+                            viewModel.signOut {
+                                navController.navigate(Screens.Login.route) {
+                                    popUpTo(navController.graph.id) {
+                                        inclusive = true
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
-
-            }
             }
         }
     }
+}
 
 
 @Composable

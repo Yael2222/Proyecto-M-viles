@@ -3,13 +3,12 @@ package com.Proyecto.coffeepalace.ui.Screens.Seller.Category
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.Proyecto.coffeepalace.Data.Model.categoria
+import com.Proyecto.coffeepalace.Data.Repository.CategoryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class CategoryViewModel : ViewModel() {
-
-    private val dao = DaoCategoryImpl()
+class CategoryViewModel(private val categoryRepository: CategoryRepository) : ViewModel() {
 
     private val _categories = MutableStateFlow<List<categoria>>(emptyList())
     val categories = _categories.asStateFlow()
@@ -20,13 +19,13 @@ class CategoryViewModel : ViewModel() {
 
     fun loadCategories() {
         viewModelScope.launch {
-            _categories.value = dao.getAllCategories()
+            _categories.value = categoryRepository.getAllCategories()
         }
     }
 
     fun addCategory(nombre: String) {
         viewModelScope.launch {
-            if (dao.addCategory(nombre)) {
+            if (categoryRepository.addCategory(nombre)) {
                 loadCategories()
             }
         }
@@ -34,7 +33,7 @@ class CategoryViewModel : ViewModel() {
 
     fun deleteCategory(id: Long) {
         viewModelScope.launch {
-            if (dao.deleteCategory(id)) {
+            if (categoryRepository.deleteCategory(id)) {
                 loadCategories()
             }
         }
