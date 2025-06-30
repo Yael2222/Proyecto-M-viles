@@ -2,7 +2,6 @@ package com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.Proyecto.coffeepalace.Data.Daos.category.DaoCategoryImpl
 import com.Proyecto.coffeepalace.Data.Daos.product.DaoProductoImpl
 import com.Proyecto.coffeepalace.Data.Model.Client.CategoryAndProductsUIModel
 import com.Proyecto.coffeepalace.Data.Model.Producto

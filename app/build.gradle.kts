@@ -1,4 +1,3 @@
-
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -14,8 +13,8 @@ android {
         applicationId = "com.Proyecto.coffeepalace"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -51,14 +50,6 @@ android {
     }
 }
 
-configurations.all {
-    resolutionStrategy {
-        force("com.google.guava:guava:31.1-jre")
-        exclude("com.google.guava", "listenablefuture")
-    }
-}
-
-
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -69,12 +60,6 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.material.icons.core)
-    //implementation(libs.androidx.navigation.compose)
-    implementation("androidx.compose.ui:ui-text-google-fonts:1.6.1")
-    implementation(libs.material3)
-    implementation(libs.androidx.material3.window.size.class1)
-    implementation(libs.androidx.material3.adaptive.navigation.suite)
-    implementation("androidx.compose.material:material-icons-extended:1.6.5")
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.coil.compose)
     implementation(libs.androidx.navigation.runtime.android)
@@ -82,11 +67,19 @@ dependencies {
     implementation(libs.supabase.kt)
     implementation(libs.supabase.postgrest)
     implementation(libs.kotlinx.serialization.json)
-    implementation("io.ktor:ktor-client-okhttp:2.3.2") {
-        exclude(group = "com.google.guava", module = "listenablefuture")
-    }
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3") // <--- ¡Asegúrate de esta versión o la más reciente!
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+    implementation("androidx.compose.material3:material3")
+    implementation(platform("androidx.compose:compose-bom:2024.04.00"))
+    implementation("io.ktor:ktor-client-okhttp:2.3.2")
     implementation("androidx.appcompat:appcompat:1.7.1")
-    implementation(libs.androidx.compiler)
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

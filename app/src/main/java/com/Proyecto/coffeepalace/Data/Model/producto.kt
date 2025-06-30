@@ -1,14 +1,15 @@
 package com.Proyecto.coffeepalace.Data.Model
 
+import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Producto(
-    val id: Long,
+data class producto(
+    val id: Long? = null,
     val nombre: String,
     val descripcion: String,
-    val precio: Double,
     val imagen: String,
-    val categoria: Long,
-
-    )
+    val precio: Double,
+    @SerializedName("categoria")
+    val categoria: Long
+)
