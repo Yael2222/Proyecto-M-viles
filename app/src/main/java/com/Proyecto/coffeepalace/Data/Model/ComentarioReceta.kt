@@ -1,6 +1,6 @@
 package com.Proyecto.coffeepalace.Data.Model
 
-data class ComentarioReceta (
+data class ComentarioReceta(
     val usuarioId: Int,
     val nombreUsuario: String,
     val RecetaId: Int,

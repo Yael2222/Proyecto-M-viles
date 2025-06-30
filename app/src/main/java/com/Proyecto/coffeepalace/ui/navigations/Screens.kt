@@ -18,4 +18,3 @@ sealed class Screens(val route: String) {
     object Search : Screens("search")
     object RecipeDetail : Screens("recipe_detail/{recipeId}")
 }
-
