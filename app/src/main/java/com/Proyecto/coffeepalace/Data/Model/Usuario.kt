@@ -1,9 +1,13 @@
 package com.Proyecto.coffeepalace.Data.Model
 
-data class Usuario (
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class usuario (
     val id: Int,
-    val nombre: String,
+    val nombre: String?,
     val correo: String,
-    val contraseña: String,
-    val carrito: List<Producto>,
-    )
+    val imagen: String?,
+    val rol: String,
+    val auth_id:String
+)

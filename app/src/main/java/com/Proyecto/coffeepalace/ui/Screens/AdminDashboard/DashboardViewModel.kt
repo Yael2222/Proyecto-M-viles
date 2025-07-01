@@ -5,6 +5,7 @@ import com.Proyecto.coffeepalace.Data.Model.DashboardItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import com.Proyecto.coffeepalace.navigation.Screens
 import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.People
@@ -21,15 +22,15 @@ class DashboardViewModel : ViewModel(){
 
     init {
         _dashboardItems.value = listOf(
-            DashboardItem("stadistics", "Stadistics", Icons.Default.Analytics, Screens.Categories.route),
-            DashboardItem("users_shops", "Users", Icons.Default.People, Screens.Categories.route),
-            DashboardItem("purchase_orders", "Purchase orders", Icons.Default.ShoppingCart, Screens.Categories.route),
-            DashboardItem("comments_ratings", "Comments and ratings", Icons.Default.Star, Screens.Categories.route),
-            DashboardItem("advertisements", "Advertisements", Icons.Default.Campaign, Screens.Categories.route),
-            DashboardItem("complaints_suggestions", "Complaints and suggestions", Icons.Default.BugReport, Screens.Categories.route),
+            //DashboardItem("stadistics", "Stadistics", Icons.Default.Analytics, Screens.Categories.route),
+            DashboardItem("users_shops", "Users", Icons.Default.People, Screens.Users.route),
+            DashboardItem("purchase_orders", "Purchase orders", Icons.Default.ShoppingCart, Screens.Orders.route),
+            DashboardItem("comments_ratings", "Comments and ratings", Icons.Default.Star, Screens.CommentsRatings.route),
+            DashboardItem("advertisements", "Advertisements", Icons.Default.Campaign, Screens.Ads.route),
+            DashboardItem("complaints_suggestions", "Complaints and suggestions", Icons.Default.BugReport, Screens.CommentsRatings.route),
             DashboardItem("categories_tags", "Categories and tags", Icons.Default.Category, Screens.Categories.route),
             //DashboardItem("categories_tags", "Categories and tags", "dashboard/categories_tags")
-            DashboardItem("logout", "Log out", Icons.Default.ExitToApp, Screens.Categories.route)
+            DashboardItem("logout", "Log out", Icons.AutoMirrored.Filled.ExitToApp, Screens.Categories.route)
         )
     }
 }

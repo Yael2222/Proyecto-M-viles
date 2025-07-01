@@ -8,6 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.Proyecto.coffeepalace.ui.Screens.AdminDashboard.AdminDashboardScreen
 import com.Proyecto.coffeepalace.ui.Screens.AdminCategoryPage.CategoryScreen
+import com.Proyecto.coffeepalace.ui.Screens.AdminAdsPage.AdminAdsScreen
+import com.Proyecto.coffeepalace.ui.Screens.AdminUsersPage.ViewUsersScreen
+import com.Proyecto.coffeepalace.ui.Screens.AdminCommentsPage.ViewCommentsWithUsersScreen
+import com.Proyecto.coffeepalace.ui.Screens.AdminPOPage.ViewFacturasScreen
 import com.Proyecto.coffeepalace.navigation.Screens
 
 @Composable
@@ -47,20 +51,40 @@ fun MainNavigation(
             )
         }
 
+        composable(Screens.Ads.route) {
+            AdminAdsScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
         // --- Pantalla de Login (Si la implementas) ---
         composable(Screens.Login.route) {
             Text(text = "Pantalla de Login (Pendiente)") // Placeholder
             // Aquí iría tu LoginScreen()
         }
 
+        composable(Screens.Users.route) {
+            ViewUsersScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screens.CommentsRatings.route) {
+            ViewCommentsWithUsersScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
+        composable(Screens.Orders.route) {
+            ViewFacturasScreen(
+                onBackClick = { navController.popBackStack() }
+            )
+        }
+
         // --- Rutas Placeholder para otros items del Dashboard ---
         // Esto es para que no falle si haces clic en otros items del Dashboard que aún no tienen una pantalla real.
         // Las rutas de ejemplo en DashboardViewModel apuntan aquí temporalmente.
         composable("dashboard/statistics") { Text(text = "Estadísticas (Pendiente)") }
-        composable("dashboard/users_shops") { Text(text = "Usuarios y Tiendas (Pendiente)") }
-        composable("dashboard/purchase_orders") { Text(text = "Órdenes de Compra (Pendiente)") }
-        composable("dashboard/comments_ratings") { Text(text = "Comentarios y Valoraciones (Pendiente)") }
-        composable("dashboard/advertisements") { Text(text = "Anuncios (Pendiente)") }
         composable("dashboard/complaints_suggestions") { Text(text = "Quejas y Sugerencias (Pendiente)") }
     }
 }

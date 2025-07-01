@@ -3,11 +3,9 @@ package com.Proyecto.coffeepalace.Data.Model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class producto(
-    val id: Int,
-    val nombre: String,
+data class ads (
+    val id: Long,
     val descripcion: String,
-    val imagen: String?,
-    val precio: Float,
-    val categoria: Int
+    val imagen: String,
+    val titulo: String,
 )
