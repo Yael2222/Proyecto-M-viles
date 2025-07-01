@@ -1,44 +1,25 @@
 package com.Proyecto.coffeepalace.ui.Screens.AdminPOPage
 
+import android.app.DatePickerDialog
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -46,9 +27,12 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.Proyecto.coffeepalace.Data.Model.FacturaConNombreUsuario
 import com.Proyecto.coffeepalace.ui.theme.CoffeeBrown
+import com.Proyecto.coffeepalace.ui.theme.LightCoffeeBrown
 import com.Proyecto.coffeepalace.ui.theme.TextWhite
+import java.time.LocalDate
+import java.util.*
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViewFacturasScreen(
@@ -59,6 +43,12 @@ fun ViewFacturasScreen(
     val facturas by viewModel.facturaConNombreUsuario.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
+
+    val estadoSelected by viewModel.selectedEstado.collectAsState()
+    val fechaInicio by viewModel.fechaInicio.collectAsState()
+    val fechaFin by viewModel.fechaFin.collectAsState()
+
+    var showFilterDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -81,6 +71,11 @@ fun ViewFacturasScreen(
                         navigationIconContentColor = TextWhite
                     )
                 )
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { showFilterDialog = true }) {
+                Icon(Icons.Filled.FilterList, contentDescription = "Filtrar")
             }
         }
     ) { paddingValues ->
@@ -111,6 +106,127 @@ fun ViewFacturasScreen(
             }
         }
     }
+
+    if (showFilterDialog) {
+        FilterDialog(
+            estadoSelected = estadoSelected,
+            fechaInicio = fechaInicio,
+            fechaFin = fechaFin,
+            onDismiss = { showFilterDialog = false },
+            onApply = { estado, inicio, fin ->
+                viewModel.setEstado(estado)
+                viewModel.setFechaInicio(inicio)
+                viewModel.setFechaFin(fin)
+                showFilterDialog = false
+            }
+        )
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun FilterDialog(
+    estadoSelected: String,
+    fechaInicio: LocalDate?,
+    fechaFin: LocalDate?,
+    onDismiss: () -> Unit,
+    onApply: (String, LocalDate?, LocalDate?) -> Unit
+) {
+    val context = LocalContext.current
+    val dateFormatter = java.time.format.DateTimeFormatter.ISO_DATE
+
+    var estado by remember { mutableStateOf(estadoSelected) }
+    var fechaInicioSelected by remember { mutableStateOf(fechaInicio) }
+    var fechaFinSelected by remember { mutableStateOf(fechaFin) }
+
+    // Para mostrar fecha en texto legible o "Sin fecha"
+    fun formatDate(date: LocalDate?) = date?.format(dateFormatter) ?: "Sin fecha"
+
+    // DatePickers
+    val datePickerInicio = remember {
+        DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                fechaInicioSelected = LocalDate.of(year, month + 1, dayOfMonth)
+            },
+            fechaInicioSelected?.year ?: LocalDate.now().year,
+            (fechaInicioSelected?.monthValue ?: LocalDate.now().monthValue) - 1,
+            fechaInicioSelected?.dayOfMonth ?: LocalDate.now().dayOfMonth
+        )
+    }
+
+    val datePickerFin = remember {
+        DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                fechaFinSelected = LocalDate.of(year, month + 1, dayOfMonth)
+            },
+            fechaFinSelected?.year ?: LocalDate.now().year,
+            (fechaFinSelected?.monthValue ?: LocalDate.now().monthValue) - 1,
+            fechaFinSelected?.dayOfMonth ?: LocalDate.now().dayOfMonth
+        )
+    }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Filtrar facturas", color = Color.White) },
+        text = {
+            Column {
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = 5.dp),
+                    thickness = 1.dp,
+                    color = Color.White.copy(alpha = 0.5f)
+                )
+                Text("Estado", color = Color.White)
+                Spacer(Modifier.height(8.dp))
+                // Dropdown para estado
+                var expanded by remember { mutableStateOf(false) }
+                Box {
+                    OutlinedButton(onClick = { expanded = true }) {
+                        Text(estado.replaceFirstChar { it.uppercase() }, color = Color.White)
+                    }
+                    DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                        listOf("todas", "pendiente", "completada", "cancelada").forEach { option ->
+                            DropdownMenuItem(
+                                text = { Text(option.replaceFirstChar { it.uppercase() }) },
+                                onClick = {
+                                    estado = option
+                                    expanded = false
+                                }
+                            )
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                Text("Fecha inicio", color = Color.White)
+                Spacer(Modifier.height(8.dp))
+                OutlinedButton(onClick = { datePickerInicio.show() }) {
+                    Text(formatDate(fechaInicioSelected), color = Color.White)
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+                Text("Fecha fin", color = Color.White)
+                Spacer(Modifier.height(8.dp))
+                OutlinedButton(onClick = { datePickerFin.show() }) {
+                    Text(formatDate(fechaFinSelected), color = Color.White)
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = { onApply(estado, fechaInicioSelected, fechaFinSelected) }) {
+                Text("Aplicar", color = Color.White)
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Cancelar", color = Color.White)
+            }
+        },
+        containerColor = LightCoffeeBrown // <-- solo funciona en versiones recientes de Compose
+    )
 }
 
 @Composable
@@ -135,10 +251,10 @@ fun FancyFacturaCard(item: FacturaConNombreUsuario) {
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center
             )
-            Divider(
-                color = Color.Gray.copy(alpha = 0.5f),
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp),
                 thickness = 1.dp,
-                modifier = Modifier.padding(vertical = 8.dp)
+                color = Color.Gray.copy(alpha = 0.5f)
             )
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -205,10 +321,10 @@ fun FancyFacturaCard(item: FacturaConNombreUsuario) {
                     ProductoDetalleCard(producto)
                 }
             }
-            Divider(
-                color = Color.Gray.copy(alpha = 0.5f),
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp),
                 thickness = 1.dp,
-                modifier = Modifier.padding(vertical = 8.dp)
+                color = Color.Gray.copy(alpha = 0.5f)
             )
             Text(
                 text = "¡Gracias por su compra!",

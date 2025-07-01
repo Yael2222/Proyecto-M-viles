@@ -29,7 +29,16 @@ class ViewCommentsWithUsersViewModel(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
 
+    //Nuevo
+    private val _filtroCalificacion = MutableStateFlow<Int?>(null)
+
     init {
+        fetchCommentsAndUsers()
+    }
+
+    //Nuevo
+    fun setFiltroCalificacion(calificacion: Int?) {
+        _filtroCalificacion.value = calificacion
         fetchCommentsAndUsers()
     }
 
@@ -51,7 +60,13 @@ class ViewCommentsWithUsersViewModel(
                         nombreProducto = productosMap[comment.id_producto]?.nombre ?: "Desconocido"
                     )
                 }
-                _comentariosConUsuario.value = combinados
+
+                //Nuevo
+                val filtrados = _filtroCalificacion.value?.let { calif ->
+                    combinados.filter { it.comentario.calificacion == calif }
+                } ?: combinados
+
+                _comentariosConUsuario.value = filtrados //cambio de filtrados
             } catch (e: Exception) {
                 _error.value = "Error al cargar datos: ${e.message}"
             } finally {

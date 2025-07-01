@@ -1,5 +1,7 @@
 package com.Proyecto.coffeepalace.ui.Screens.AdminPOPage
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.Proyecto.coffeepalace.Data.Daos.usuario.DaoUsuario
@@ -17,7 +19,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 class ViewFacturasViewModel(
     private val daoUsuario: DaoUsuario = DaoUsuarioImpl(),
     private val daoFactura: DaoFactura = DaoFacturaImpl(),
@@ -25,6 +30,7 @@ class ViewFacturasViewModel(
     private val daoDetalle: DaoDetalleDeFactura = DaoDetalleDeFacturaImpl(),
     private val daoProducto: DaoProducto = DaoProductoImpl()
 ) : ViewModel() {
+
     private val _facturaConNombreUsuario = MutableStateFlow<List<FacturaConNombreUsuario>>(emptyList())
     val facturaConNombreUsuario: StateFlow<List<FacturaConNombreUsuario>> = _facturaConNombreUsuario.asStateFlow()
 
@@ -34,10 +40,43 @@ class ViewFacturasViewModel(
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow()
 
+    // Filtros
+    private val _selectedEstado = MutableStateFlow("todas")
+    val selectedEstado: StateFlow<String> = _selectedEstado.asStateFlow()
+
+    private val _fechaInicio = MutableStateFlow<LocalDate?>(null)
+    val fechaInicio: StateFlow<LocalDate?> = _fechaInicio.asStateFlow()
+
+    private val _fechaFin = MutableStateFlow<LocalDate?>(null)
+    val fechaFin: StateFlow<LocalDate?> = _fechaFin.asStateFlow()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private val dateFormatter = DateTimeFormatter.ISO_DATE // "2025-06-30"
+
+
     init {
         fetchFacturaAndUsers()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setEstado(estado: String) {
+        _selectedEstado.value = estado
+        fetchFacturaAndUsers()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setFechaInicio(fecha: LocalDate?) {
+        _fechaInicio.value = fecha
+        fetchFacturaAndUsers()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun setFechaFin(fecha: LocalDate?) {
+        _fechaFin.value = fecha
+        fetchFacturaAndUsers()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun fetchFacturaAndUsers() {
         viewModelScope.launch {
             _isLoading.value = true
@@ -53,7 +92,39 @@ class ViewFacturasViewModel(
                 val ordenesMap = ordenes.associateBy({ it.id_factura }, { it.estado })
                 val productosMap = productos.associateBy { it.id }
 
-                val combinadosFU = facturas.map { factura ->
+                val estadoFiltro = _selectedEstado.value.lowercase()
+                val fechaInicioFiltro = _fechaInicio.value
+                val fechaFinFiltro = _fechaFin.value
+
+                val filtrado = facturas.filter { factura ->
+                    // Filtro estado
+                    val estado = ordenesMap[factura.id]?.lowercase() ?: "desconocido"
+                    val estadoOk = estadoFiltro == "todas" || estado == estadoFiltro
+
+                    // Filtro fechas
+                    val fechaFactura = try {
+                        LocalDate.parse(factura.fecha.take(10), dateFormatter) // solo "YYYY-MM-DD"
+                    } catch (e: Exception) {
+                        null
+                    }
+
+                    val fechaOk = when {
+                        fechaInicioFiltro != null && fechaFinFiltro != null -> {
+                            fechaFactura != null && (fechaFactura >= fechaInicioFiltro && fechaFactura <= fechaFinFiltro)
+                        }
+                        fechaInicioFiltro != null -> {
+                            fechaFactura != null && fechaFactura >= fechaInicioFiltro
+                        }
+                        fechaFinFiltro != null -> {
+                            fechaFactura != null && fechaFactura <= fechaFinFiltro
+                        }
+                        else -> true
+                    }
+
+                    estadoOk && fechaOk
+                }
+
+                val combinadosFU = filtrado.map { factura ->
 
                     val detallesDeEstaFactura = detalles.filter { it.id_factura == factura.id }
                     val productosFactura = detallesDeEstaFactura.mapNotNull { detalle ->
