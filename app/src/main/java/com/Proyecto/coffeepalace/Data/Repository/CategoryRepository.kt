@@ -1,12 +1,12 @@
 package com.Proyecto.coffeepalace.Data.Repository
 
 import com.Proyecto.coffeepalace.Data.Daos.category.DaoCategory
-import com.Proyecto.coffeepalace.Data.Model.categoria
+import com.Proyecto.coffeepalace.Data.Model.Categoria
 import com.Proyecto.coffeepalace.Data.Network.ApiService
 
 class CategoryRepository(private val apiService: ApiService) : DaoCategory {
 
-    override suspend fun getAllCategories(): List<categoria> {
+    override suspend fun getAllCategories(): List<Categoria> {
         return try {
             apiService.getAllCategories()
         } catch (e: Exception) {
@@ -15,10 +15,14 @@ class CategoryRepository(private val apiService: ApiService) : DaoCategory {
         }
     }
 
+    override suspend fun getCategoryById(id: Long): Categoria? {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun addCategory(name: String): Boolean {
         return try {
             // Ahora puedes crear un objeto categoria sin el ID, ya que es nullable.
-            val categoryToAdd = categoria(nombre = name)
+            val categoryToAdd = Categoria(nombre = name)
             val response = apiService.addCategory(categoryToAdd)
             // Comprueba si la respuesta del backend tiene un ID asignado, lo que indica éxito.
             response.id != null

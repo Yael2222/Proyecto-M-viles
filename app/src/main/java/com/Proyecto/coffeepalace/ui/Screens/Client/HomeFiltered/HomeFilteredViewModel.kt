@@ -2,6 +2,7 @@ package com.Proyecto.coffeepalace.ui.Screens.Client.HomeFiltered
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.Proyecto.coffeepalace.Data.Daos.category.DaoCategoryImpl
 import com.Proyecto.coffeepalace.Data.Daos.product.DaoProductoImpl
 import com.Proyecto.coffeepalace.Data.Model.Client.CategoryAndProductsUIModel
 import com.Proyecto.coffeepalace.Data.Model.Producto
@@ -28,9 +29,9 @@ class HomeFilteredViewModel : ViewModel() {
         viewModelScope.launch {
             val category = categoryDao.getCategoryById(categoryId)
             if (category != null) {
-                val products = productDao.getProductsByCategory(category.id)
+                val products = category.id?.let { productDao.getProductsByCategory(it) }
                 _productsWithCategory.update {
-                    CategoryAndProductsUIModel(category, products)
+                    products?.let { it1 -> CategoryAndProductsUIModel(category, it1) }
                 }
             }
         }

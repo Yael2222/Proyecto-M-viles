@@ -31,13 +31,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.Proyecto.coffeepalace.Data.Model.categoria
+import com.Proyecto.coffeepalace.Data.Model.Categoria
 import com.Proyecto.coffeepalace.ui.theme.black
 
 @Composable
 fun FeaturesLazyRow(
     modifier: Modifier = Modifier,
-    categories: List<categoria>,
+    categories: List<Categoria>,
     navigateToHomeFiltered: (Long) -> Unit
 ) {
     LazyRow(
@@ -59,7 +59,7 @@ fun FeaturesLazyRow(
 
 @Composable
 fun FeatureItemCard(
-    category: categoria,
+    category: Categoria,
     modifier: Modifier = Modifier,
     navigateToHomeFiltered: (Long) -> Unit
 
@@ -67,7 +67,7 @@ fun FeatureItemCard(
     Card(
         modifier = modifier
             .clickable {
-                navigateToHomeFiltered(category.id)
+                category.id?.let { navigateToHomeFiltered(it) }
             }
             .height(150.dp)
             .width(110.dp),

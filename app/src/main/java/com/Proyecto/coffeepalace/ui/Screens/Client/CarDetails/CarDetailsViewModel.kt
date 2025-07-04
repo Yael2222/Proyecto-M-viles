@@ -23,6 +23,11 @@ class CarDetailsViewModel : ViewModel() {
     private val _total = MutableStateFlow<Double>(0.0)
     val total = _total.asStateFlow()
 
+    init {
+        loadShoppingcarProducts(11)
+        loadUserInformation(11)
+    }
+
     fun loadShoppingcarProducts(userId: Long) {
         viewModelScope.launch {
             _shoppingcarProducts.value = dao.getAllOwnShoppingCar(userId)

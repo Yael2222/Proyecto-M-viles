@@ -12,6 +12,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import android.content.Context
 import com.Proyecto.coffeepalace.Data.Repository.AuthRepository
+import com.Proyecto.coffeepalace.Data.Repository.CheckoutRepository
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -48,6 +49,10 @@ object AppContainer {
     }
     val orderRepository: OrderRepository by lazy {
         OrderRepository(apiService)
+    }
+    
+    val checkoutRepository: CheckoutRepository by lazy {
+        CheckoutRepository(apiService)
     }
     private lateinit var _googleSignInOptions: GoogleSignInOptions
     private lateinit var _googleSignInClient: GoogleSignInClient

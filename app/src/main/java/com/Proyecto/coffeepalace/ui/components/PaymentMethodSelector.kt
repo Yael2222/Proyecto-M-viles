@@ -24,13 +24,6 @@ fun PaymentMethodSelector(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        PaymentOption(
-            title = "PayPal",
-            subtitle = paypalEmail,
-            icon = Icons.Default.CreditCard,
-            isSelected = selectedMethod == "PayPal",
-            onSelect = { onMethodSelected("PayPal") }
-        )
 
         Spacer(modifier = Modifier.height(12.dp))
 

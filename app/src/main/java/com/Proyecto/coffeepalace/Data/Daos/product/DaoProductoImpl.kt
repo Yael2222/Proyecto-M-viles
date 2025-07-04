@@ -1,5 +1,6 @@
 package com.Proyecto.coffeepalace.Data.Daos.product
 
+import com.Proyecto.coffeepalace.Data.Model.Categoria
 import com.Proyecto.coffeepalace.Data.Model.Producto
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
@@ -19,6 +20,22 @@ class DaoProductoImpl : DaoProducto {
     ) {
 
         install(Postgrest)
+    }
+
+    override suspend fun addProducto(producto: Producto): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getCategoriasProducto(): List<Categoria> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getProductos(): List<Producto> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteProducto(id: Long?): Boolean {
+        TODO("Not yet implemented")
     }
 
 

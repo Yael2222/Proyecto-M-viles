@@ -2,11 +2,12 @@ package com.Proyecto.coffeepalace.ui.Screens.Client.HomePage
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.Proyecto.coffeepalace.Data.Daos.category.DaoCategoryImpl
 import com.Proyecto.coffeepalace.Data.Daos.discount.DaoAnuncioImpl
 import com.Proyecto.coffeepalace.Data.Daos.product.DaoProductoImpl
 import com.Proyecto.coffeepalace.Data.Model.Anuncio
 import com.Proyecto.coffeepalace.Data.Model.Client.CategoryAndProductsUIModel
-import com.Proyecto.coffeepalace.Data.Model.categoria
+import com.Proyecto.coffeepalace.Data.Model.Categoria
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -23,7 +24,7 @@ class HomePageViewModel : ViewModel() {
     private val _announcements = MutableStateFlow<List<Anuncio>>(emptyList())
     val announcements = _announcements.asStateFlow()
 
-    private val _categories = MutableStateFlow<List<categoria>>(emptyList())
+    private val _categories = MutableStateFlow<List<Categoria>>(emptyList())
     val categories = _categories.asStateFlow()
 
     init {

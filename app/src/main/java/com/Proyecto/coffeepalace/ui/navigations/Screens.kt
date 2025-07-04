@@ -17,4 +17,16 @@ sealed class Screens(val route: String) {
     object ProductDetail : Screens("product_detail")
     object Search : Screens("search")
     object RecipeDetail : Screens("recipe_detail/{recipeId}")
+
+    object ViewStock : Screens("view_stock")
+    object Comments : Screens("comments")
+    object HomeClient : Screens("home_client")
+    object ProfileClient : Screens("profile_client")
+    object CarDetailsClient : Screens("car_details_client")
+    object CheckoutClient : Screens("checkout_client")
+    object ConfirmationPaymentClient : Screens("confirmation_payment_client")
+    object HomeFilteredClient : Screens("home_filtered_client")
+    object OrderDetailsClient : Screens("order_details_client")
+    object GetStartedClient : Screens("get_started_client")
+    object EntryPoints : Screens("entry_points")
 }

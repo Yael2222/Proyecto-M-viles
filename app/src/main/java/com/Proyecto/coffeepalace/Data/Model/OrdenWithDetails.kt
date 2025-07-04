@@ -17,7 +17,7 @@ data class DetalleFacturaConProductoCompleto(
     val id: Long? = null,
     @SerializedName("id_factura") val idFactura: Long,
     @SerializedName("id_producto") val idProducto: Long,
-    @SerializedName("producto") val producto: producto?
+    @SerializedName("producto") val producto: Producto?
 )
 
 // Modelo para la factura, con sus detalles de factura y AHORA con el usuario anidado

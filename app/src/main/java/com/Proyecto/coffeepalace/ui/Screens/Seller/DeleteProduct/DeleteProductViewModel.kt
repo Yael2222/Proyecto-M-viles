@@ -3,17 +3,17 @@ package com.Proyecto.coffeepalace.ui.Screens.Seller.Product
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.Proyecto.coffeepalace.Data.Model.categoria
-import com.Proyecto.coffeepalace.Data.Model.producto
+import com.Proyecto.coffeepalace.Data.Model.Categoria
+import com.Proyecto.coffeepalace.Data.Model.Producto
 import com.Proyecto.coffeepalace.Data.Repository.ProductRepository
 import kotlinx.coroutines.launch
 
 class DeleteProductViewModel(private val productRepository: ProductRepository) : ViewModel() {
 
-    var productos by mutableStateOf<List<producto>>(emptyList())
+    var Productos by mutableStateOf<List<Producto>>(emptyList())
         private set
 
-    var categorias by mutableStateOf<List<categoria>>(emptyList())
+    var Categorias by mutableStateOf<List<Categoria>>(emptyList())
         private set
 
     var mensaje by mutableStateOf("")
@@ -26,14 +26,14 @@ class DeleteProductViewModel(private val productRepository: ProductRepository) :
     private fun loadData() {
         viewModelScope.launch {
             try {
-                categorias = productRepository.getCategoriasProducto()
+                Categorias = productRepository.getCategoriasProducto()
             } catch (e: Exception) {
                 mensaje = "Error al cargar categorías: ${e.message}"
                 println(mensaje)
             }
 
             try {
-                productos = productRepository.getProductos()
+                Productos = productRepository.getProductos()
             } catch (e: Exception) {
                 mensaje = "Error al cargar productos: ${e.message}"
                 println(mensaje)

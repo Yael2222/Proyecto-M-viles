@@ -19,6 +19,10 @@ class CheckoutViewModel : ViewModel() {
 
     private val dao = DaoShoppingCarImpl()
 
+    init {
+        getTotal(11)
+    }
+
     fun getTotal(userId: Long) {
         viewModelScope.launch {
             val products = dao.getAllOwnShoppingCar(userId)

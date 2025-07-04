@@ -1,7 +1,6 @@
 package com.Proyecto.coffeepalace.ui.Screens.Seller.Ordenes
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -17,10 +16,8 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
-import com.Proyecto.coffeepalace.Data.Model.DetalleFacturaConProductoCompleto
 import com.Proyecto.coffeepalace.Data.Model.OrdenWithDetails
-import com.Proyecto.coffeepalace.Data.Model.producto
-import com.Proyecto.coffeepalace.Data.Model.UsuarioOrden // <--- ¡NUEVA IMPORTACIÓN!
+import com.Proyecto.coffeepalace.Data.Model.Producto
 import androidx.compose.ui.text.style.TextOverflow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -204,7 +201,7 @@ fun OrderCard(order: OrdenWithDetails, onUpdateStatusClick: (Long, String) -> Un
 }
 
 @Composable
-fun ProductOrderItem(product: producto) {
+fun ProductOrderItem(product: Producto) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,

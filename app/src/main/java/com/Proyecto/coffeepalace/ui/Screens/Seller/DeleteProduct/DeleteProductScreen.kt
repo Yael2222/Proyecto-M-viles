@@ -18,8 +18,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.Proyecto.coffeepalace.Data.Model.categoria
-import com.Proyecto.coffeepalace.Data.Model.producto
+import com.Proyecto.coffeepalace.Data.Model.Categoria
+import com.Proyecto.coffeepalace.Data.Model.Producto
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,9 +27,9 @@ fun DeleteProductScreen(
     viewModel: DeleteProductViewModel,
     navController: NavHostController
 ) {
-    val productos = viewModel.productos
+    val productos = viewModel.Productos
     val mensaje = viewModel.mensaje
-    val categorias = viewModel.categorias
+    val categorias = viewModel.Categorias
 
     Scaffold(
         topBar = {
@@ -67,7 +67,7 @@ fun DeleteProductScreen(
                 items(productos, key = { it.id ?: 0L }) { producto ->
                     ProductCard(
                         producto = producto,
-                        categorias = categorias,
+                        Categorias = categorias,
                         onDelete = {
                             producto.id?.let { viewModel.deleteProduct(it) }
                         }
@@ -79,8 +79,8 @@ fun DeleteProductScreen(
 }
 
 @Composable
-fun ProductCard(producto: producto, categorias: List<categoria>, onDelete: () -> Unit) {
-    val categoriaNombre = categorias.find { it.id == producto.categoria }?.nombre
+fun ProductCard(producto: Producto, Categorias: List<Categoria>, onDelete: () -> Unit) {
+    val categoriaNombre = Categorias.find { it.id == producto.categoria }?.nombre
         ?: "Categoría Desconocida"
 
     Card(

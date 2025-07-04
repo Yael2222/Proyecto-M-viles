@@ -1,8 +1,8 @@
 package com.Proyecto.coffeepalace.Data.Network
 
-import com.Proyecto.coffeepalace.Data.Model.categoria
+import com.Proyecto.coffeepalace.Data.Model.Categoria
 import com.Proyecto.coffeepalace.Data.Model.ingrediente
-import com.Proyecto.coffeepalace.Data.Model.producto
+import com.Proyecto.coffeepalace.Data.Model.Producto
 import com.Proyecto.coffeepalace.Data.Model.usuario
 import com.Proyecto.coffeepalace.Data.Model.receta
 import com.Proyecto.coffeepalace.Data.Model.receta_ingrediente
@@ -21,7 +21,6 @@ import retrofit2.http.Multipart
 import retrofit2.http.Part
 
 data class UpdateOrderStatusRequest(val estado: String)
-
 
 data class AuthRequest(val email: String, val password: String)
 // --- ¡NUEVO! Request para el registro que incluye el nombre ---
@@ -55,10 +54,10 @@ interface ApiService {
 
     //categoria
     @GET("categories")
-    suspend fun getAllCategories(): List<categoria>
+    suspend fun getAllCategories(): List<Categoria>
 
     @POST("categories")
-    suspend fun addCategory(@Body category: categoria): categoria
+    suspend fun addCategory(@Body category: Categoria): Categoria
 
     @DELETE("categories/{id}")
     suspend fun deleteCategory(@Path("id") id: Long)
@@ -80,13 +79,13 @@ interface ApiService {
     suspend fun updateOrderStatus(@Path("id") orderId: Long, @Body request: UpdateOrderStatusRequest): orden_vendedor
     //producto
     @GET("products")
-    suspend fun getAllProducts(): List<producto>
+    suspend fun getAllProducts(): List<Producto>
 
     @POST("products")
-    suspend fun addProduct(@Body product: producto): producto
+    suspend fun addProduct(@Body product: Producto): Producto
 
     @GET("products/categories")
-    suspend fun getProductCategories(): List<categoria>
+    suspend fun getProductCategories(): List<Categoria>
 
     @DELETE("products/{id}")
     suspend fun deleteProduct(@Path("id") id: Long): Response<Unit>
@@ -111,4 +110,10 @@ interface ApiService {
     //usuario
     @GET("usuarios")
     suspend fun getAllUsers(): List<usuario>
+
+    @POST("client/checkout/orders")
+    suspend fun createOrder(@Body body: CreateOrderBody): OrderIdResponse
+
+    @POST("client/checkout/capture")
+    suspend fun captureOrder(@Body body: CaptureBody)
 }

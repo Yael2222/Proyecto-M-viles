@@ -1,6 +1,6 @@
 package com.Proyecto.coffeepalace.Data.Daos.shoppingCard
 
-import com.Proyecto.coffeepalace.Data.Model.Client.Carrito
+import com.Proyecto.coffeepalace.Data.Model.Client.CarritoProductos
 
 interface DaoShoppingCar {
     suspend fun getAllOwnShoppingCar(userId: Long): List<CarritoProductos>

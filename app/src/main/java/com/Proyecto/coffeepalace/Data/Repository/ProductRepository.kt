@@ -1,8 +1,8 @@
 package com.Proyecto.coffeepalace.Data.Repository
 
 import com.Proyecto.coffeepalace.Data.Daos.product.DaoProducto
-import com.Proyecto.coffeepalace.Data.Model.categoria
-import com.Proyecto.coffeepalace.Data.Model.producto
+import com.Proyecto.coffeepalace.Data.Model.Categoria
+import com.Proyecto.coffeepalace.Data.Model.Producto
 import com.Proyecto.coffeepalace.Data.Network.ApiService
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -25,7 +25,7 @@ class ProductRepository(private val apiService: ApiService) : DaoProducto {
         }
     }
 
-    override suspend fun addProducto(producto: producto): Boolean {
+    override suspend fun addProducto(producto: Producto): Boolean {
         return try {
             val response = apiService.addProduct(producto)
             response.id != null
@@ -35,7 +35,7 @@ class ProductRepository(private val apiService: ApiService) : DaoProducto {
         }
     }
 
-    override suspend fun getCategoriasProducto(): List<categoria> {
+    override suspend fun getCategoriasProducto(): List<Categoria> {
         return try {
             apiService.getProductCategories()
         } catch (e: Exception) {
@@ -44,7 +44,7 @@ class ProductRepository(private val apiService: ApiService) : DaoProducto {
         }
     }
 
-    override suspend fun getProductos(): List<producto> {
+    override suspend fun getProductos(): List<Producto> {
         return try {
             apiService.getAllProducts()
         } catch (e: Exception) {
@@ -69,5 +69,13 @@ class ProductRepository(private val apiService: ApiService) : DaoProducto {
             e.printStackTrace()
             false
         }
+    }
+
+    override suspend fun getAllProducts(): List<Producto> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getProductsByCategory(categoryId: Long): List<Producto> {
+        TODO("Not yet implemented")
     }
 }

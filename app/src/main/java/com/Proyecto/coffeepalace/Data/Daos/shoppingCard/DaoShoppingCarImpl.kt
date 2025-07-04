@@ -1,12 +1,16 @@
 package com.Proyecto.coffeepalace.Data.Daos.shoppingCard
 
+import com.Proyecto.coffeepalace.Data.Daos.SupabaseProvider
 import com.Proyecto.coffeepalace.Data.Model.Client.Carrito
+import com.Proyecto.coffeepalace.Data.Model.Client.CarritoProductos
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.postgrest.query.Columns.Companion.raw
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
+
 
 class DaoShoppingCarImpl : DaoShoppingCar {
 
@@ -14,24 +18,18 @@ class DaoShoppingCarImpl : DaoShoppingCar {
         const val name = "carrito"
     }
 
-    private val supabase: SupabaseClient = createSupabaseClient(
-        supabaseUrl = "https://gcdxyzsgpkmmiemvaskx.supabase.co",
-        supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdjZHh5enNncGttbWllbXZhc2t4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyMDgzODcsImV4cCI6MjA2Mzc4NDM4N30.ooXN38ZDnjEWd4uzaZJsoG8IzfERlX009nVqh9ggpq0"
-    ) {
-
-        install(Postgrest)
-    }
+    private val supabase = SupabaseProvider.supabase
 
     override suspend fun getAllOwnShoppingCar(userId: Long): List<CarritoProductos> {
         return try {
             supabase.postgrest
                 .from(Table.name)
-                .select(columns = Columns.raw("id, id_cliente, producto(*)")) {
-                    eq("id_cliente", userId)
+                .select(columns = raw("id, id_usuario, producto(*)")) {
+                    eq("id_usuario", userId)
                 }
                 .decodeList<CarritoProductos>()
         } catch (e: Exception) {
-            println("Error deleting category: ${e.message}")
+            println("Error getting category: ${e.message}")
             listOf<CarritoProductos>()
         }
     }
@@ -39,10 +37,11 @@ class DaoShoppingCarImpl : DaoShoppingCar {
     override suspend fun getOwnShoppingCarById(shoppingCarId: Long): CarritoProductos? {
         return supabase.postgrest
             .from(Table.name)
-            .select(single = true) {
+            .select(columns = raw("id, id_usuario, producto(*)")) {
                 eq("id", shoppingCarId)
             }
-            .decodeSingleOrNull<CarritoProductos>()
+            .decodeList<CarritoProductos>()
+            .firstOrNull()
     }
 
     override suspend fun addProductToShoppingCar(productId: Long, clientId: Long): Boolean {

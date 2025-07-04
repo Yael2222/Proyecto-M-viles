@@ -5,8 +5,8 @@ import android.content.Context // <--- Nueva importación para usar el contexto
 import android.net.Uri // <--- Nueva importación
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.Proyecto.coffeepalace.Data.Model.categoria
-import com.Proyecto.coffeepalace.Data.Model.producto
+import com.Proyecto.coffeepalace.Data.Model.Categoria
+import com.Proyecto.coffeepalace.Data.Model.Producto
 import com.Proyecto.coffeepalace.Data.Repository.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +21,7 @@ class AddProductViewModel(private val productRepository: ProductRepository) : Vi
     val imageUri = MutableStateFlow<String?>(null) // Esto ahora almacenará la URL PÚBLICA
     val selectedCategoryId = MutableStateFlow<Long?>(null)
 
-    private val _categorias = MutableStateFlow<List<categoria>>(emptyList())
+    private val _categorias = MutableStateFlow<List<Categoria>>(emptyList())
     val categorias = _categorias.asStateFlow()
 
     private val _saveSuccess = MutableStateFlow(false)
@@ -111,7 +111,7 @@ class AddProductViewModel(private val productRepository: ProductRepository) : Vi
                 return@launch
             }
 
-            val productToSave = producto(
+            val productToSave = Producto(
                 nombre = name.value,
                 descripcion = description.value,
                 imagen = imageUri.value ?: "", // Usar la URL que ya está en imageUri.value

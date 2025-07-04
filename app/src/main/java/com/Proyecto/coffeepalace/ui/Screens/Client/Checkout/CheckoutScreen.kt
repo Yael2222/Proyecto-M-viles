@@ -20,11 +20,13 @@ import androidx.compose.ui.unit.dp
 import com.Proyecto.coffeepalace.ui.components.CustomButton
 import com.Proyecto.coffeepalace.ui.components.HomeTitle
 import com.Proyecto.coffeepalace.ui.components.OrderSummary
+import com.Proyecto.coffeepalace.ui.components.PayPalButtonComponent
 import com.Proyecto.coffeepalace.ui.components.PaymentMethodSelector
 import com.Proyecto.coffeepalace.ui.theme.LightGray200
 
 @Composable
 fun CheckoutScreen(
+    ppManager: PayPalManager,
     modifier: Modifier = Modifier,
     viewModel: CheckoutViewModel,
     navigateToPayment: () -> Unit = {},
@@ -49,6 +51,7 @@ fun CheckoutScreen(
 
         item {
             HomeTitle(title = "Payment", modifier = Modifier.padding(16.dp))
+            PayPalButtonComponent(ppManager)
             PaymentMethodSelector(
                 selectedMethod = selectedMethod,
                 onMethodSelected = { method ->

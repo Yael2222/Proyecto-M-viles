@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.Proyecto.coffeepalace.Data.Model.DeliveryAddressModel
@@ -32,15 +33,18 @@ fun CarDetailsScreen(
     navigateToCheckout: () -> Unit = {},
     navigateToOrderDetails: (Long) -> Unit = {}
 ) {
-    //TODO: Add user logic here
-    LaunchedEffect(Unit) {
-        viewModel.loadShoppingcarProducts(10)
-        viewModel.loadUserInformation(10)
-    }
 
     val shoppingCarProducts by viewModel.shoppingcarProducts.collectAsState()
     val user by viewModel.userInformation.collectAsState()
     val total by viewModel.total.collectAsState()
+
+    LaunchedEffect(Unit) {
+        snapshotFlow {
+            shoppingCarProducts
+        }.collect {
+            viewModel.getTotalFromShoppingCar()
+        }
+    }
 
     Column(
         modifier = modifier
@@ -80,9 +84,9 @@ fun CarDetailsScreen(
                         originalPrice = String.format("%.2f", item.producto.precio),
                         imageRes = item.producto.imagen,
                         quantity = 1,
-                        navigateToOrderDetails = {
-                            navigateToOrderDetails(item.producto.id)
-                        }
+//                        navigateToOrderDetails = {
+//                            navigateToOrderDetails(item.producto.id)
+//                        }
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
