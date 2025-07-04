@@ -11,13 +11,15 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+        maven("https://jitpack.io") // <- necesario para supabase-kt
     }
 }
+
 
 rootProject.name = "Coffee Palace"
 include(":app")
