@@ -1,6 +1,7 @@
 package com.Proyecto.coffeepalace.Data.Repository
 
 import com.Proyecto.coffeepalace.Data.Daos.receta.DaoReceta // Tu interfaz DaoReceta
+import com.Proyecto.coffeepalace.Data.Model.RecetaWithIngredientes
 import com.Proyecto.coffeepalace.Data.Model.ingrediente
 import com.Proyecto.coffeepalace.Data.Model.receta
 import com.Proyecto.coffeepalace.Data.Model.receta_ingrediente
@@ -17,7 +18,16 @@ class RecetaRepository(private val apiService: ApiService) : DaoReceta {
             emptyList()
         }
     }
-
+    override suspend fun getRecetaByIdWithIngredientes(idReceta: Long): RecetaWithIngredientes? {
+        return try {
+            // Retrofit ahora deserializará directamente a RecetaWithIngredientes
+            apiService.getRecetaByIdWithIngredientes(idReceta)
+        } catch (e: Exception) {
+            println("Error fetching receta con ingredientes desde backend para ID $idReceta: ${e.message}")
+            e.printStackTrace()
+            null
+        }
+    }
     override suspend fun addReceta(receta: receta, ingredientesIds: List<Long>): Boolean {
         return try {
             val requestBody = AddRecetaRequestBody(receta, ingredientesIds)

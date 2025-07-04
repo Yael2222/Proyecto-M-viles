@@ -52,6 +52,15 @@ class ProductRepository(private val apiService: ApiService) : DaoProducto {
             emptyList()
         }
     }
+    suspend fun getProductoById(id: Int): Result<producto> {
+        return try {
+            val producto = apiService.getProductById(id) // Asume que ApiService tiene getProductById
+            Result.Success(producto)
+        } catch (e: Exception) {
+            println("Error fetching product by ID from backend: ${e.message}")
+            Result.Error(e)
+        }
+    }
 
     override suspend fun deleteProducto(id: Long?): Boolean {
         return try {

@@ -1,65 +1,77 @@
 package com.Proyecto.coffeepalace.ui.Screens.Client.HomePage
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.Proyecto.coffeepalace.Data.Daos.discount.DaoAnuncioImpl
-import com.Proyecto.coffeepalace.Data.Daos.product.DaoProductoImpl
-import com.Proyecto.coffeepalace.Data.Model.Anuncio
-import com.Proyecto.coffeepalace.Data.Model.Client.CategoryAndProductsUIModel
 import com.Proyecto.coffeepalace.Data.Model.categoria
+import com.Proyecto.coffeepalace.Data.Model.producto
+import com.Proyecto.coffeepalace.Data.Repository.CategoryRepository
+import com.Proyecto.coffeepalace.Data.Repository.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class HomePageViewModel : ViewModel() {
-    private val dao = DaoProductoImpl()
-    private val categoryDao = DaoCategoryImpl()
-    private val anuncioDao = DaoAnuncioImpl()
-
-    private val _productsWithCategories =
-        MutableStateFlow<List<CategoryAndProductsUIModel>>(emptyList())
-    val productsWithCategories = _productsWithCategories.asStateFlow()
-
-    private val _announcements = MutableStateFlow<List<Anuncio>>(emptyList())
-    val announcements = _announcements.asStateFlow()
+class HomeViewModel(
+    private val productRepository: ProductRepository,
+    private val categoryRepository: CategoryRepository
+) : ViewModel() {
 
     private val _categories = MutableStateFlow<List<categoria>>(emptyList())
-    val categories = _categories.asStateFlow()
+    val categories: StateFlow<List<categoria>> = _categories
+
+    private val _productsByCategory = MutableStateFlow<Map<Long, List<producto>>>(emptyMap())
+    val productsByCategory: StateFlow<Map<Long, List<producto>>> = _productsByCategory
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
 
     init {
-        initialLoad()
+        fetchHomeData()
     }
 
-    fun initialLoad() {
-        loadCategories()
-        loadAnnouncements()
-        loadProducts()
-    }
-
-    fun loadProducts() {
+    private fun fetchHomeData() {
         viewModelScope.launch {
-            val categories = categoryDao.getAllCategories()
-            val products = dao.getAllProducts()
+            _isLoading.value = true
+            _errorMessage.value = null
+            try {
+                // Fetch categories
+                val fetchedCategories = categoryRepository.getAllCategories()
+                _categories.value = fetchedCategories
 
-            val categoryAndProducts = categories.map { category ->
-                val productsFromCategory =
-                    products.filter { product -> product.categoria == category.id }
-                CategoryAndProductsUIModel(category, productsFromCategory)
+                // Fetch all products
+                val allProducts = productRepository.getProductos()
+
+                // Group products by category ID
+                val groupedProducts = allProducts.groupBy { it.categoria }
+                _productsByCategory.value = groupedProducts
+
+            } catch (e: Exception) {
+                _errorMessage.value = "Error loading data: ${e.message}"
+                println("Error fetching home data: ${e.message}")
+            } finally {
+                _isLoading.value = false
             }
-
-            _productsWithCategories.value = categoryAndProducts
         }
     }
 
-    fun loadAnnouncements() {
-        viewModelScope.launch {
-            _announcements.value = anuncioDao.getAllAnuncios()
-        }
+    fun refreshData() {
+        fetchHomeData()
     }
+}
 
-    fun loadCategories() {
-        viewModelScope.launch {
-            _categories.value = categoryDao.getAllCategories()
+// ViewModel Factory for HomeViewModel
+class HomeViewModelFactory(
+    private val productRepository: ProductRepository,
+    private val categoryRepository: CategoryRepository
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST")
+            return HomeViewModel(productRepository, categoryRepository) as T
         }
+        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

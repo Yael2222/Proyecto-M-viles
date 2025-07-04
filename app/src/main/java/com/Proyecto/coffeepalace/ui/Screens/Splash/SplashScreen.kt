@@ -24,14 +24,14 @@ fun SplashScreen(navController: NavController) {
         showLoading = true
         delay(1500)
 
-        navController.navigate(Screens.Login.route) {
+        navController.navigate(Screens.Home.route) {
             popUpTo("splash_screen") { inclusive = true }
         }
     }
 
     val painter = rememberAsyncImagePainter(
         ImageRequest.Builder(LocalContext.current)
-            .data("file:///android_asset/LogoCoffee.png")
+            .data("file:///android_asset/CooffeLogo2.png")
             .build()
     )
 

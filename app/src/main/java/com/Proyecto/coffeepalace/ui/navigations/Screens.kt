@@ -14,7 +14,13 @@ sealed class Screens(val route: String) {
     object Login : Screens("login")
     object SignUp : Screens("signup")
     object ForgotPassword : Screens("forgot_password")
-    object ProductDetail : Screens("product_detail")
+    object ProductDetail : Screens("product_detail/{productId}") {
+        fun createRoute(productId: Int) = "product_detail/$productId"
+    }    object RecetaDetail : Screens("receta_detail/{recetaId}") {
+        fun createRoute(recetaId: Long) = "receta_detail/$recetaId"
+    }
+    object Home : Screens("home_screen") // This is the new Home page
+    object ShoppingCart : Screens("shopping_cart") // NUEVO
     object Search : Screens("search")
-    object RecipeDetail : Screens("recipe_detail/{recipeId}")
+    object User_Settings : Screens("user_settings_screen")
 }

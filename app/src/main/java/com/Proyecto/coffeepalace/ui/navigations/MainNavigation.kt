@@ -1,15 +1,23 @@
 package com.Proyecto.coffeepalace.ui.navigations
 
+import androidx.activity.ComponentActivity
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.activity
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.Proyecto.coffeepalace.Data.LoginViewModelFactory
+import com.Proyecto.coffeepalace.Data.Repository.RecetaRepository
 import com.Proyecto.coffeepalace.ui.Screens.Seller.AddProduct.AddProductScreen
 import com.Proyecto.coffeepalace.ui.Screens.Seller.AddProduct.AddProductViewModel
 import com.Proyecto.coffeepalace.ui.Screens.Seller.Category.CategoryScreen
@@ -36,18 +44,50 @@ import com.Proyecto.coffeepalace.ui.Screens.SignUp.SignUpViewModelFactory
 import com.Proyecto.coffeepalace.ui.Screens.ForgotPassword.ForgotPasswordViewModelFactory
 import com.Proyecto.coffeepalace.ui.Screens.Seller.HomeSellerViewModelFactory
 import com.Proyecto.coffeepalace.di.AppContainer
+import com.Proyecto.coffeepalace.di.AppContainer.recetaRepository
+import com.Proyecto.coffeepalace.ui.Screens.Client.HomePage.HomeScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.HomePage.HomeViewModel
+import com.Proyecto.coffeepalace.ui.Screens.User.UserProfileScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.ProductDetail.ProductDetailScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.RecetaDetail.RecetaDetailScreen
+import com.Proyecto.coffeepalace.ui.Screens.Client.RecetaDetail.RecetaDetailViewModel
+import com.Proyecto.coffeepalace.ui.Screens.Client.ShoppingCart.ShoppingCartScreen
+import com.Proyecto.coffeepalace.ui.Screens.Search.SearchScreen
+
+/*
+import com.Proyecto.coffeepalace.ui.Screens.CategoryClient.CategoryClientScreen
+import com.Proyecto.coffeepalace.ui.Screens.ShoppingCart.ShoppingCartScreen
+import com.Proyecto.coffeepalace.ui.Screens.Search.SearchScreen
+*/
+import com.Proyecto.coffeepalace.ui.Screens.User.UserViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NavGraph() {
     val navController = rememberNavController()
+    val context = LocalContext.current
+    // CASTEAMOS EL CONTEXT A ComponentActivity
+    val activity = context as ComponentActivity // <-- ¡ESTE ES EL CAMBIO CLAVE!
 
-    val loginViewModelFactory = LoginViewModelFactory(navController.context) // Pasa el contexto
+    // Asegúrate de que AppContainer ya esté inicializado antes de llegar aquí.
+    // Esto se haría en MainActivity.onCreate()
+    val recetaRepository = recetaRepository
+    val loginViewModelFactory = LoginViewModelFactory(navController.context)
     val signUpViewModelFactory = SignUpViewModelFactory()
     val forgotPasswordViewModelFactory = ForgotPasswordViewModelFactory()
-    val homeSellerViewModelFactory = HomeSellerViewModelFactory() // <--- Instancia la factoría
+    val homeSellerViewModelFactory = HomeSellerViewModelFactory()
 
 
+    val homeViewModelFactory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return HomeViewModel(AppContainer.productRepository, AppContainer.categoryRepository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class for HomeViewModel")
+        }
+    }
     val orderViewModelFactory = object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(OrderViewModel::class.java)) {
@@ -67,7 +107,8 @@ fun NavGraph() {
             throw IllegalArgumentException("Unknown ViewModel class for CategoryViewModel")
         }
     }
-    val userViewModelFactory = object : ViewModelProvider.Factory {
+
+    val userViewModelFactorySeller = object : ViewModelProvider.Factory { // Renombrado para evitar conflicto
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ViewUsersViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
@@ -107,7 +148,6 @@ fun NavGraph() {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(AddRecetaViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                // AddRecetaViewModel requiere dos repositorios
                 return AddRecetaViewModel(
                     AppContainer.recetaRepository,
                     AppContainer.productRepository
@@ -126,30 +166,105 @@ fun NavGraph() {
             throw IllegalArgumentException("Unknown ViewModel class for DeleteRecetaViewModel")
         }
     }
+
+    val userProfileViewModelFactory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(UserViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                // Pasa tanto authRepository como userRepository
+                return UserViewModel(
+                    AppContainer.authRepository, AppContainer.userRepository,
+                    AppContainer.orderRepository
+                ) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class for UserViewModel")
+        }
+    }
+    class RecetaDetailViewModelFactory(
+        private val recetaRepository: RecetaRepository
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(RecetaDetailViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return RecetaDetailViewModel(recetaRepository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
+
+
     NavHost(navController = navController, startDestination = Screens.Splash.route) {
 
         composable(route = Screens.Splash.route) {
             SplashScreen(navController = navController)
         }
-        composable(route = Screens.HomeSeller.route) {
-            val homeSellerViewModel: HomeSellerViewModel = viewModel(factory = homeSellerViewModelFactory) // <--- ¡CAMBIO AQUÍ! Usa la factoría
-            HomeSellerScreen(viewModel = homeSellerViewModel, navController = navController)
+        composable(route = Screens.Home.route) {
+            val homeViewModel: HomeViewModel = viewModel(factory = homeViewModelFactory)
+            HomeScreen(navController = navController, viewModel = homeViewModel)
         }
-        composable(route = Screens.Login.route) { // <--- RUTA DE LOGIN
-            LoginScreen(
-                onNavigateToForgotPassword = { navController.navigate(Screens.ForgotPassword.route) },
-                onNavigateToSignUp = { navController.navigate(Screens.SignUp.route) },
-                onLoginSuccess = { navController.navigate(Screens.HomeSeller.route) {
-                    popUpTo(Screens.Login.route) { inclusive = true } // Eliminar Login del back stack
-                }}
+
+        composable(Screens.Search.route) {
+            SearchScreen(navController = navController)
+        }
+        composable(Screens.ShoppingCart.route) { ShoppingCartScreen(navController) } // NUEVO
+
+        composable(
+            route = "product_detail/{productId}",
+            arguments = listOf(navArgument("productId") { type = NavType.IntType }) // Esperamos un Int
+        ) { backStackEntry ->
+            val productId = backStackEntry.arguments?.getInt("productId")
+            if (productId != null) {
+                ProductDetailScreen(navController = navController, productId = productId)
+            } else {
+                Text("Error: ID de producto no proporcionado.")
+            }
+        }
+        composable(
+            route = "receta_detail/{recetaId}",
+            arguments = listOf(navArgument("recetaId") { type = NavType.LongType })
+        ) { backStackEntry ->
+            val recetaId = backStackEntry.arguments?.getLong("recetaId") ?: -1L
+
+            // CREACIÓN MANUAL DEL VIEWMODEL USANDO UN FACTORY
+            val viewModelFactory = remember {
+                RecetaDetailViewModelFactory(recetaRepository)
+            }
+            val recetaDetailViewModel: RecetaDetailViewModel = viewModel(
+                viewModelStoreOwner = activity, // Ahora 'activity' es de tipo ComponentActivity
+                factory = viewModelFactory
+            )
+
+            // Pasar el ViewModel al Composable
+            RecetaDetailScreen(
+                navController = navController,
+                recetaId = recetaId,
+                viewModel = recetaDetailViewModel
             )
         }
-        composable(route = Screens.SignUp.route) { // <--- RUTA DE SIGNUP
+
+        composable(route = Screens.User_Settings.route) {
+            val userViewModel: UserViewModel = viewModel(factory = userProfileViewModelFactory) // <--- Usar la nueva factory
+            UserProfileScreen(navController = navController, userViewModel = userViewModel) // <--- Usar la pantalla de perfil
+        }
+        composable(route = Screens.HomeSeller.route) {
+            val homeSellerViewModel: HomeSellerViewModel = viewModel(factory = homeSellerViewModelFactory)
+            HomeSellerScreen(viewModel = homeSellerViewModel, navController = navController)
+        }
+        composable(route = Screens.Login.route) {
+            LoginScreen(
+                navController = navController, // Pasa el navController al LoginScreen
+                onNavigateToForgotPassword = { navController.navigate(Screens.ForgotPassword.route) },
+                onNavigateToSignUp = { navController.navigate(Screens.SignUp.route) }
+                // onLoginSuccess ya no se pasa aquí, se maneja dentro de LoginScreen con navController
+            )
+        }
+        composable(route = Screens.SignUp.route) {
             SignUpScreen(
+                navController = navController, // <-- YOU NEED TO PASS THE NAVCONTROLLER HERE
                 onNavigateToLogin = { navController.navigate(Screens.Login.route) {
-                    popUpTo(Screens.SignUp.route) { inclusive = true } // Eliminar SignUp del back stack
+                    popUpTo(Screens.SignUp.route) { inclusive = true }
                 } },
-                onBackToLogin = { navController.popBackStack() }
+                onBackToLogin = { navController.popBackStack() } // Consider if this is still needed or if the TopAppBar handles back
             )
         }
         composable(route = Screens.ForgotPassword.route) {
@@ -162,8 +277,6 @@ fun NavGraph() {
             val orderViewModel: OrderViewModel = viewModel(factory = orderViewModelFactory)
             OrderScreen(viewModel = orderViewModel, navController = navController)
         }
-
-
 
         composable(route = Screens.Category.route) {
             val categoryViewModel: CategoryViewModel = viewModel(factory = categoryViewModelFactory)
@@ -182,7 +295,6 @@ fun NavGraph() {
             addIngredienteScreen(viewModel = ingredienteViewModel, navController = navController)
         }
 
-
         composable(route = Screens.AddReceta.route) {
             val addRecetaViewModel: AddRecetaViewModel =
                 viewModel(factory = addRecetaViewModelFactory)
@@ -196,7 +308,7 @@ fun NavGraph() {
         }
 
         composable(route = Screens.ViewUsers.route) {
-            val viewUsersViewModel: ViewUsersViewModel = viewModel(factory = userViewModelFactory)
+            val viewUsersViewModel: ViewUsersViewModel = viewModel(factory = userViewModelFactorySeller) // Usar la factory renombrada
             ViewUsersScreen(viewModel = viewUsersViewModel, navController = navController)
         }
 
@@ -205,6 +317,5 @@ fun NavGraph() {
                 viewModel(factory = deleteRecetaViewModelFactory)
             DeleteRecetaScreen(viewModel = deleteRecetaViewModel, navController = navController)
         }
-
     }
 }

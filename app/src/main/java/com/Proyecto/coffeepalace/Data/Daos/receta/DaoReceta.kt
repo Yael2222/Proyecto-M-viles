@@ -1,6 +1,7 @@
 package com.Proyecto.coffeepalace.Data.Daos.receta
 
 
+import com.Proyecto.coffeepalace.Data.Model.RecetaWithIngredientes
 import com.Proyecto.coffeepalace.Data.Model.ingrediente
 import com.Proyecto.coffeepalace.Data.Model.receta
 import com.Proyecto.coffeepalace.Data.Model.receta_ingrediente // ¡Necesitas un modelo para esta tabla!
@@ -13,5 +14,6 @@ interface DaoReceta {
     suspend fun getAllRecetas(): List<receta>
     suspend fun deleteReceta(idReceta: Long?): Boolean
     suspend fun getAllRecetaIngredienteRelations(): List<receta_ingrediente>
+    suspend fun getRecetaByIdWithIngredientes(idReceta: Long): RecetaWithIngredientes?
 
 }

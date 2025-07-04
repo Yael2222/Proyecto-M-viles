@@ -13,3 +13,4 @@ data class producto(
     @SerializedName("categoria")
     val categoria: Long
 )
+
